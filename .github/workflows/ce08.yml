@@ -10,6 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
       - uses: actions/checkout@v4
 
@@ -33,7 +34,7 @@ jobs:
         run: |
           echo "run-tests outcome=${{ steps.run-tests.outcome }}"
           echo "run-tests conclusion=${{ steps.run-tests.conclusion }}"
-          echo "failure()=${{ failure() }}"
+          echo "job status=${{ job.status }}"
 
       - id: upload-failure-logs
         if: ${{ failure() }}
@@ -48,3 +49,4 @@ jobs:
         run: |
           echo "upload outcome=${{ steps.upload-failure-logs.outcome }}"
           echo "upload conclusion=${{ steps.upload-failure-logs.conclusion }}"
+          echo "job status=${{ job.status }}"
