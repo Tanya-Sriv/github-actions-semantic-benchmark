@@ -1,0 +1,22 @@
+# Repository Setup Checklist
+
+- [ ] Create a dedicated synthetic GitHub repository.
+- [ ] Confirm no employer or proprietary content is included.
+- [ ] Extract this package.
+- [ ] Initialize Git on `main`.
+- [ ] Commit the package.
+- [ ] Add the GitHub remote.
+- [ ] Push `main`.
+- [ ] Create the four experiment branches.
+- [ ] Push all four branches.
+- [ ] Verify each branch’s active workflow files.
+- [ ] Confirm Actions is enabled.
+- [ ] Confirm no secrets are configured or required.
+- [ ] Run CE08 baseline.
+- [ ] Run CE08 mutant.
+- [ ] Save CE08 evidence.
+- [ ] Run six CE11 baseline overlap trials.
+- [ ] Run six CE11 mutant overlap trials.
+- [ ] Save CE11 evidence.
+- [ ] Complete adjudication files.
+- [ ] Review all evidence before changing oracle status.

@@ -1,0 +1,27 @@
+case_id: CE08
+variant: baseline_or_mutant
+repository:
+branch:
+commit_sha:
+workflow_sha256:
+run_id:
+run_url:
+runner_os:
+python_version:
+started_at:
+completed_at:
+observations:
+  run_tests_outcome:
+  run_tests_conclusion:
+  failure_function_value:
+  upload_step_outcome:
+  upload_step_conclusion:
+  artifact_created:
+  job_conclusion:
+  workflow_conclusion:
+raw_evidence:
+  workflow_log:
+  job_log:
+  artifact_metadata:
+reviewer:
+review_date:

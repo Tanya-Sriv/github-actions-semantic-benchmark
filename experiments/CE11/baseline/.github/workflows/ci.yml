@@ -1,0 +1,24 @@
+name: CE11 baseline CI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-main
+  cancel-in-progress: true
+
+jobs:
+  hold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Record start time
+        run: date -u +"%Y-%m-%dT%H:%M:%SZ"
+      - name: Hold workflow for overlap
+        run: sleep 90
+      - name: Record end time
+        if: ${{ always() }}
+        run: date -u +"%Y-%m-%dT%H:%M:%SZ"

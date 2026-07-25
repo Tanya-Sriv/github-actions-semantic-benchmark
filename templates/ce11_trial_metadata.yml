@@ -1,0 +1,21 @@
+case_id: CE11
+variant: baseline_or_mutant
+trial:
+trigger_order: ci_then_release_or_release_then_ci
+repository:
+branch:
+commit_sha:
+ci_run_id:
+release_run_id:
+ci_started_at:
+release_started_at:
+trigger_delta_seconds:
+ci_conclusion:
+release_conclusion:
+cancelled_run:
+queued_or_serialized_run:
+raw_evidence:
+  ci_log:
+  release_log:
+reviewer:
+review_date:

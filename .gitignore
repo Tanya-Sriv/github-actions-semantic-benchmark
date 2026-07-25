@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.DS_Store
+
+# Raw evidence may contain large logs. Keep metadata tracked and review logs before committing.
+results/**/raw/
+results/**/*.zip
+
+# Never commit secrets
+.env
+*.pem
+*.key
+secrets.*

@@ -1,0 +1,50 @@
+name: CE08 mutant failure handling
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test dependencies
+        run: python -m pip install -r fixture/requirements.txt
+
+      - id: run-tests
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p logs
+          python -m pytest -q fixture 2>&1 | tee logs/test-output.txt
+
+      - name: Record test-step state
+        if: ${{ always() }}
+        run: |
+          echo "run-tests outcome=${{ steps.run-tests.outcome }}"
+          echo "run-tests conclusion=${{ steps.run-tests.conclusion }}"
+          echo "failure()=${{ failure() }}"
+
+      - id: upload-failure-logs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-logs
+          path: logs/
+          if-no-files-found: error
+
+      - name: Record upload-step state
+        if: ${{ always() }}
+        run: |
+          echo "upload outcome=${{ steps.upload-failure-logs.outcome }}"
+          echo "upload conclusion=${{ steps.upload-failure-logs.conclusion }}"

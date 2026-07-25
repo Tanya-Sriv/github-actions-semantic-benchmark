@@ -1,0 +1,10 @@
+case_id: CE08
+mutant_id: B003_RL02_001
+status: confirmed_or_contradicted_or_inconclusive_or_execution_failed_or_not_run
+baseline_run_id:
+mutant_run_id:
+observation:
+interpretation:
+limitation:
+reviewer:
+review_date:

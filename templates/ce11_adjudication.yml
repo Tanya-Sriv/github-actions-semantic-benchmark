@@ -1,0 +1,14 @@
+case_id: CE11
+mutant_id: B005_CC02_001
+status: confirmed_or_contradicted_or_inconclusive_or_execution_failed_or_not_run
+baseline_trials:
+mutant_trials:
+interference_observed_in_baseline:
+interference_observed_in_mutant:
+cancellations:
+serialization_events:
+observation:
+interpretation:
+limitation:
+reviewer:
+review_date:

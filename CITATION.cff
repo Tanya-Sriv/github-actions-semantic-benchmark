@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Please cite the archived release associated with the paper."
+title: "GitHub Actions Controlled-Execution Pilot"
+type: software
+authors:
+  - family-names: "REPLACE"
+    given-names: "REPLACE"
+version: 0.1.0
+date-released: 2026-07-25
+license: MIT
