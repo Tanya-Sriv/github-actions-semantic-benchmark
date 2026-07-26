@@ -1,0 +1,410 @@
+name: Run pinned-action sensitivity analysis
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-sensitivity:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Verify benchmark corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          baseline_count=$(
+            find benchmark/baselines \
+              -type f -path "*/workflows/*" \
+              \( -name "*.yml" -o -name "*.yaml" \) |
+            wc -l
+          )
+
+          mutant_count=$(
+            find benchmark/mutants \
+              -type f -path "*/workflows/*" \
+              \( -name "*.yml" -o -name "*.yaml" \) |
+            wc -l
+          )
+
+          echo "Baseline workflow files: ${baseline_count}"
+          echo "Mutant workflow files: ${mutant_count}"
+
+          test "$baseline_count" -eq 6
+          test "$mutant_count" -eq 18
+
+      - name: Install benchmark tools
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          curl -sSfL \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz \
+            -o actionlint.tar.gz
+          tar -xzf actionlint.tar.gz
+          sudo install actionlint /usr/local/bin/actionlint
+
+          python -m pip install --disable-pip-version-check "zizmor==1.28.0"
+
+          curl -sSfL \
+            https://github.com/boostsecurityio/poutine/releases/download/v1.1.4/poutine_Linux_x86_64.tar.gz \
+            -o poutine.tar.gz
+          tar -xzf poutine.tar.gz
+          sudo install poutine /usr/local/bin/poutine
+
+          actionlint -version
+          zizmor --version
+          poutine version
+
+      - name: Create SHA-pinned benchmark copy
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          rm -rf pinned-sensitivity
+          mkdir -p pinned-sensitivity/corpus
+          cp -a benchmark/baselines pinned-sensitivity/corpus/
+          cp -a benchmark/mutants pinned-sensitivity/corpus/
+          cp -a benchmark/mutant_manifest.csv pinned-sensitivity/corpus/ 2>/dev/null || true
+
+          cat > pinned-sensitivity/pin_actions.py <<'PY'
+          from __future__ import annotations
+
+          import csv
+          import hashlib
+          import re
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          ROOT = Path("pinned-sensitivity/corpus")
+
+          # Matches remote actions such as:
+          # actions/checkout@v5
+          # github/codeql-action/upload-sarif@v3
+          USES_RE = re.compile(
+              r"(?P<prefix>\buses:\s*)"
+              r"(?P<repo>[^/\s#]+/[^/@\s#]+)"
+              r"(?P<subpath>/[^@\s#]+)?"
+              r"@(?P<ref>[^\s#]+)"
+          )
+          FULL_SHA_RE = re.compile(r"^[0-9a-fA-F]{40}$")
+
+          cache: dict[tuple[str, str], str] = {}
+          mappings: list[dict[str, str]] = []
+          rewrites: list[dict[str, str]] = []
+
+          def resolve(repo: str, ref: str) -> str:
+              key = (repo, ref)
+              if key in cache:
+                  return cache[key]
+
+              if FULL_SHA_RE.fullmatch(ref):
+                  cache[key] = ref.lower()
+                  return cache[key]
+
+              url = f"https://github.com/{repo}.git"
+              specs = [
+                  f"refs/tags/{ref}^{{}}",
+                  f"refs/tags/{ref}",
+                  f"refs/heads/{ref}",
+              ]
+              proc = subprocess.run(
+                  ["git", "ls-remote", url, *specs],
+                  check=True,
+                  text=True,
+                  capture_output=True,
+              )
+
+              candidates: dict[str, str] = {}
+              for line in proc.stdout.splitlines():
+                  sha, name = line.split("\t", 1)
+                  candidates[name] = sha
+
+              preferred = [
+                  f"refs/tags/{ref}^{{}}",
+                  f"refs/tags/{ref}",
+                  f"refs/heads/{ref}",
+              ]
+              sha = next((candidates[name] for name in preferred if name in candidates), None)
+              if not sha or not FULL_SHA_RE.fullmatch(sha):
+                  raise RuntimeError(f"Could not resolve {repo}@{ref} to a full commit SHA")
+
+              cache[key] = sha.lower()
+              mappings.append(
+                  {
+                      "action_repository": repo,
+                      "original_ref": ref,
+                      "resolved_sha": cache[key],
+                      "source": "git ls-remote against the official GitHub repository",
+                  }
+              )
+              return cache[key]
+
+          workflow_files = sorted(
+              p
+              for p in ROOT.rglob("*")
+              if p.is_file()
+              and p.suffix in {".yml", ".yaml"}
+              and "workflows" in p.parts
+          )
+
+          if len(workflow_files) != 24:
+              raise RuntimeError(
+                  f"Expected 24 workflow files (6 baseline + 18 mutant), found {len(workflow_files)}"
+              )
+
+          for path in workflow_files:
+              original = path.read_text(encoding="utf-8")
+
+              def replace(match: re.Match[str]) -> str:
+                  repo = match.group("repo")
+                  subpath = match.group("subpath") or ""
+                  ref = match.group("ref")
+
+                  # Local and Docker references do not match this regex.
+                  sha = resolve(repo, ref)
+                  old = f"{repo}{subpath}@{ref}"
+                  new = f"{repo}{subpath}@{sha}"
+                  rewrites.append(
+                      {
+                          "file": path.as_posix(),
+                          "original_uses": old,
+                          "pinned_uses": new,
+                      }
+                  )
+                  return f"{match.group('prefix')}{new}"
+
+              updated = USES_RE.sub(replace, original)
+              path.write_text(updated, encoding="utf-8")
+
+          # Verify every remote uses reference is now pinned.
+          violations: list[str] = []
+          for path in workflow_files:
+              for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                  match = USES_RE.search(line)
+                  if match and not FULL_SHA_RE.fullmatch(match.group("ref")):
+                      violations.append(
+                          f"{path}:{line_no}: {match.group('repo')}@{match.group('ref')}"
+                      )
+
+          if violations:
+              raise RuntimeError(
+                  "Unpinned remote action references remain:\n" + "\n".join(violations)
+              )
+
+          with Path("pinned-sensitivity/action-ref-mapping.csv").open(
+              "w", newline="", encoding="utf-8"
+          ) as handle:
+              writer = csv.DictWriter(
+                  handle,
+                  fieldnames=[
+                      "action_repository",
+                      "original_ref",
+                      "resolved_sha",
+                      "source",
+                  ],
+              )
+              writer.writeheader()
+              writer.writerows(sorted(mappings, key=lambda row: (row["action_repository"], row["original_ref"])))
+
+          with Path("pinned-sensitivity/file-rewrites.csv").open(
+              "w", newline="", encoding="utf-8"
+          ) as handle:
+              writer = csv.DictWriter(
+                  handle,
+                  fieldnames=["file", "original_uses", "pinned_uses"],
+              )
+              writer.writeheader()
+              writer.writerows(rewrites)
+
+          with Path("pinned-sensitivity/pinned-file-hashes.csv").open(
+              "w", newline="", encoding="utf-8"
+          ) as handle:
+              writer = csv.DictWriter(
+                  handle,
+                  fieldnames=["file", "sha256"],
+              )
+              writer.writeheader()
+              for path in workflow_files:
+                  writer.writerow(
+                      {
+                          "file": path.as_posix(),
+                          "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                      }
+                  )
+
+          print(f"Pinned {len(rewrites)} action references in {len(workflow_files)} workflow files.")
+          for row in sorted(mappings, key=lambda item: item["action_repository"]):
+              print(
+                  f"{row['action_repository']}@{row['original_ref']} -> {row['resolved_sha']}"
+              )
+          PY
+
+          python pinned-sensitivity/pin_actions.py
+
+      - name: Verify pinned inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Resolved action mappings:"
+          cat pinned-sensitivity/action-ref-mapping.csv
+
+          echo
+          echo "Pinned baseline workflows:"
+          find pinned-sensitivity/corpus/baselines \
+            -type f -path "*/workflows/*" \
+            \( -name "*.yml" -o -name "*.yaml" \) |
+            sort
+
+          echo
+          echo "Pinned mutant workflows:"
+          find pinned-sensitivity/corpus/mutants \
+            -type f -path "*/workflows/*" \
+            \( -name "*.yml" -o -name "*.yaml" \) |
+            sort
+
+      - name: Scan pinned baselines
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NO_COLOR: "1"
+          TERM: dumb
+        run: |
+          set -euo pipefail
+
+          results="pinned-sensitivity/results/baselines"
+          mkdir -p "$results"
+
+          for baseline_dir in pinned-sensitivity/corpus/baselines/B*; do
+            baseline_id=$(basename "$baseline_dir")
+            out="$results/$baseline_id"
+            mkdir -p "$out"
+
+            mapfile -t workflows < <(
+              find "$baseline_dir" \
+                -type f -path "*/workflows/*" \
+                \( -name "*.yml" -o -name "*.yaml" \) |
+              sort
+            )
+
+            printf '%s\n' "${workflows[@]}" > "$out/input-files.txt"
+
+            set +e
+
+            actionlint -format '{{json .}}' "${workflows[@]}" \
+              > "$out/actionlint.jsonl" \
+              2> "$out/actionlint.stderr.txt"
+            echo $? > "$out/actionlint.exit-code.txt"
+
+            zizmor --format json --no-exit-codes "${workflows[@]}" \
+              > "$out/zizmor.json" \
+              2> "$out/zizmor.stderr.txt"
+            echo $? > "$out/zizmor.exit-code.txt"
+
+            poutine analyze_local "$baseline_dir" --format json \
+              > "$out/poutine.json" \
+              2> "$out/poutine.stderr.txt"
+            echo $? > "$out/poutine.exit-code.txt"
+
+            set -e
+          done
+
+      - name: Scan pinned mutants
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NO_COLOR: "1"
+          TERM: dumb
+        run: |
+          set -euo pipefail
+
+          results="pinned-sensitivity/results/mutants"
+          mkdir -p "$results"
+
+          mapfile -t workflows < <(
+            find pinned-sensitivity/corpus/mutants \
+              -type f -path "*/workflows/*" \
+              \( -name "*.yml" -o -name "*.yaml" \) |
+            sort
+          )
+
+          if [ "${#workflows[@]}" -ne 18 ]; then
+            echo "Expected 18 mutant workflow files, found ${#workflows[@]}" >&2
+            exit 1
+          fi
+
+          for workflow in "${workflows[@]}"; do
+            mutant_dir=$(dirname "$(dirname "$workflow")")
+            mutant_id=$(basename "$mutant_dir")
+            out="$results/$mutant_id"
+            mkdir -p "$out"
+            printf '%s\n' "$workflow" > "$out/input-file.txt"
+
+            set +e
+
+            actionlint -format '{{json .}}' "$workflow" \
+              > "$out/actionlint.jsonl" \
+              2> "$out/actionlint.stderr.txt"
+            echo $? > "$out/actionlint.exit-code.txt"
+
+            zizmor --format json --no-exit-codes "$workflow" \
+              > "$out/zizmor.json" \
+              2> "$out/zizmor.stderr.txt"
+            echo $? > "$out/zizmor.exit-code.txt"
+
+            poutine analyze_local "$mutant_dir" --format json \
+              > "$out/poutine.json" \
+              2> "$out/poutine.stderr.txt"
+            echo $? > "$out/poutine.exit-code.txt"
+
+            set -e
+          done
+
+      - name: Create result inventory and metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          {
+            echo "repository=${{ github.repository }}"
+            echo "source_commit=${{ github.sha }}"
+            echo "workflow_run_id=${{ github.run_id }}"
+            echo "workflow_run_attempt=${{ github.run_attempt }}"
+            echo "actionlint=$(actionlint -version 2>&1)"
+            echo "zizmor=$(zizmor --version 2>&1)"
+            echo "poutine=$(poutine version 2>&1)"
+            echo "baseline_workflow_count=$(find pinned-sensitivity/corpus/baselines -type f -path '*/workflows/*' \( -name '*.yml' -o -name '*.yaml' \) | wc -l)"
+            echo "mutant_workflow_count=$(find pinned-sensitivity/corpus/mutants -type f -path '*/workflows/*' \( -name '*.yml' -o -name '*.yaml' \) | wc -l)"
+          } > pinned-sensitivity/run-metadata.txt
+
+          find pinned-sensitivity \
+            -type f \
+            -printf '%P\n' |
+            sort > pinned-sensitivity/FILELIST.txt
+
+          sha256sum \
+            pinned-sensitivity/action-ref-mapping.csv \
+            pinned-sensitivity/file-rewrites.csv \
+            pinned-sensitivity/pinned-file-hashes.csv \
+            pinned-sensitivity/run-metadata.txt \
+            > pinned-sensitivity/key-files.sha256
+
+      - name: Upload pinned sensitivity results
+        uses: actions/upload-artifact@v4
+        with:
+          name: pinned-action-sensitivity-results
+          path: pinned-sensitivity/
+          if-no-files-found: error
+          retention-days: 30
