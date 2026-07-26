@@ -1,0 +1,83 @@
+name: Run mutant scans
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan-mutants:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Install actionlint
+        run: |
+          curl -sSfL https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz -o actionlint.tar.gz
+          tar -xzf actionlint.tar.gz
+          sudo install actionlint /usr/local/bin/actionlint
+
+      - name: Install zizmor
+        run: python -m pip install --disable-pip-version-check "zizmor==1.28.0"
+
+      - name: Install poutine
+        run: |
+          curl -sSfL https://github.com/boostsecurityio/poutine/releases/download/v1.1.4/poutine_Linux_x86_64.tar.gz -o poutine.tar.gz
+          tar -xzf poutine.tar.gz
+          sudo install poutine /usr/local/bin/poutine
+
+      - name: Scan each mutant
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -u
+          mkdir -p mutant-scanner-results
+          mapfile -t workflows < <(find benchmark/mutants -type f -path "*/workflows/*" \( -name "*.yml" -o -name "*.yaml" \) | sort)
+          echo "Found ${#workflows[@]} mutant workflow files"
+          if [ "${#workflows[@]}" -ne 18 ]; then
+            echo "Expected 18 mutant workflow files" >&2
+            exit 1
+          fi
+
+          for workflow in "${workflows[@]}"; do
+            mutant_dir=$(dirname "$(dirname "$workflow")")
+            mutant_id=$(basename "$mutant_dir")
+            out="mutant-scanner-results/$mutant_id"
+            mkdir -p "$out"
+            printf '%s\n' "$workflow" > "$out/input-file.txt"
+
+            set +e
+            actionlint -format '{{json .}}' "$workflow" > "$out/actionlint.jsonl" 2> "$out/actionlint.stderr.txt"
+            echo $? > "$out/actionlint.exit-code.txt"
+
+            zizmor --format json --no-exit-codes "$workflow" > "$out/zizmor.json" 2> "$out/zizmor.stderr.txt"
+            echo $? > "$out/zizmor.exit-code.txt"
+
+            poutine analyze_local "$mutant_dir" --format json > "$out/poutine.json" 2> "$out/poutine.stderr.txt"
+            echo $? > "$out/poutine.exit-code.txt"
+            set -e
+          done
+
+      - name: Save metadata
+        run: |
+          {
+            echo "repository=${{ github.repository }}"
+            echo "commit=${{ github.sha }}"
+            echo "run_id=${{ github.run_id }}"
+            echo "actionlint=$(actionlint -version 2>&1)"
+            echo "zizmor=$(zizmor --version 2>&1)"
+            echo "poutine=$(poutine version 2>&1)"
+          } > mutant-scanner-results/run-metadata.txt
+
+      - name: Upload mutant scanner results
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutant-scanner-results
+          path: mutant-scanner-results/
+          if-no-files-found: error
+          retention-days: 30
