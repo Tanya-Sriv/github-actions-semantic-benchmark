@@ -1,0 +1,42 @@
+[
+  {
+    "control_id": "NC001_COMMENT_ONLY",
+    "source_baseline": "B001",
+    "transformation": "Add a YAML comment before the build job.",
+    "equivalence_class": "parsed-object equality",
+    "expected_scanner_relation": "identical normalized findings",
+    "rationale": "YAML comments are discarded by the parser and cannot change workflow execution."
+  },
+  {
+    "control_id": "NC002_SEQUENCE_STYLE",
+    "source_baseline": "B002",
+    "transformation": "Convert matrix lists from YAML flow style to block style.",
+    "equivalence_class": "parsed-object equality",
+    "expected_scanner_relation": "identical normalized findings",
+    "rationale": "Flow and block sequence syntax represent the same ordered YAML sequence."
+  },
+  {
+    "control_id": "NC003_QUOTE_STYLE",
+    "source_baseline": "B003",
+    "transformation": "Change quoting style for equivalent scalar values.",
+    "equivalence_class": "parsed-object equality",
+    "expected_scanner_relation": "identical normalized findings",
+    "rationale": "The resulting YAML scalar values are unchanged after parsing."
+  },
+  {
+    "control_id": "NC004_EVENT_KEY_ORDER",
+    "source_baseline": "B004",
+    "transformation": "Reverse the order of push and pull_request mapping keys.",
+    "equivalence_class": "parsed-object equality ignoring mapping order",
+    "expected_scanner_relation": "identical normalized findings",
+    "rationale": "YAML mapping-key order does not alter the set or configuration of workflow triggers."
+  },
+  {
+    "control_id": "NC005_EXPLICIT_SUCCESS",
+    "source_baseline": "B005",
+    "transformation": "Add an explicit job-level if: ${{ success() }} condition.",
+    "equivalence_class": "normalized operational equality",
+    "expected_scanner_relation": "identical normalized findings",
+    "rationale": "GitHub Actions applies success() as the implicit default job condition when no status-check condition is supplied."
+  }
+]

@@ -1,0 +1,33 @@
+schema_version: "0.1"
+baseline_id: B001
+intent_version: "1.0"
+description: Build produces exactly one package artifact that verify must consume.
+scope:
+  platform: github-actions
+  workflow_files:
+    - .github/workflows/ci.yml
+  repository_fixture: fixture
+expectations:
+  required_events: [pull_request]
+  required_jobs: [build, verify]
+  required_dependencies:
+    - upstream: build
+      downstream: verify
+      reason: verify consumes the artifact produced by build
+      strict: true
+  artifacts:
+    - logical_name: package-${{ github.sha }}
+      producer_job: build
+      consumer_jobs: [verify]
+      required_when: on_success
+      matrix_key_fields: []
+      must_be_unique_per_matrix_cell: false
+  timeouts:
+    - job: build
+      required: true
+      maximum_minutes: 15
+    - job: verify
+      required: true
+      maximum_minutes: 15
+notes:
+  - Artifact producer-consumer matching is an objective workflow relation.

@@ -1,0 +1,44 @@
+schema_version: "0.1"
+baseline_id: B003
+intent_version: "1.0"
+description: Test failures remain blocking, failure logs are collected, and summarize runs regardless of test outcome.
+scope:
+  platform: github-actions
+  workflow_files:
+    - .github/workflows/ci.yml
+  repository_fixture: fixture
+expectations:
+  required_events: [pull_request]
+  required_jobs: [test, summarize]
+  required_dependencies:
+    - upstream: test
+      downstream: summarize
+      reason: summarize reports the final test conclusion
+      strict: true
+  artifacts:
+    - logical_name: failure-logs
+      producer_job: test
+      consumer_jobs: []
+      required_when: on_failure
+      matrix_key_fields: []
+      must_be_unique_per_matrix_cell: false
+  failure_semantics:
+    blocking_jobs: [test]
+    blocking_steps:
+      - job: test
+        step_id: run-tests
+    required_failure_handlers:
+      - job: test
+        step_or_job: upload-failure-logs
+        handler_type: artifact
+        condition: failure()
+      - job: summarize
+        step_or_job: summarize
+        handler_type: report
+        condition: always()
+  timeouts:
+    - job: test
+      required: true
+      maximum_minutes: 20
+notes:
+  - Controlled failing variants will be created separately for O4 confirmation.

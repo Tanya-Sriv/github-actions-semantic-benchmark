@@ -1,0 +1,22 @@
+schema_version: "0.1"
+baseline_id: B001
+title: "Artifact producer-consumer baseline"
+category: "artifact_flow"
+source_type: synthetic
+license: MIT
+workflow_files:
+  - .github/workflows/ci.yml
+fixture_language: Python
+fixture_entrypoint: pytest -q
+execution_required: true
+applicable_operators:
+  - AR01
+  - AR02
+  - AR03
+  - CF01
+confidentiality:
+  employer_data_used: false
+  proprietary_code_used: false
+  public_repository_code_copied: false
+notes:
+  - Independently created synthetic fixture for benchmark use.

@@ -1,0 +1,23 @@
+schema_version: "0.1"
+baseline_id: B002
+title: "Matrix coverage baseline"
+category: "matrix_coverage"
+source_type: synthetic
+license: MIT
+workflow_files:
+  - .github/workflows/ci.yml
+fixture_language: Python
+fixture_entrypoint: pytest -q
+execution_required: true
+applicable_operators:
+  - REF02
+  - MX01
+  - MX02
+  - MX03
+  - RL01
+confidentiality:
+  employer_data_used: false
+  proprietary_code_used: false
+  public_repository_code_copied: false
+notes:
+  - Independently created synthetic fixture for benchmark use.

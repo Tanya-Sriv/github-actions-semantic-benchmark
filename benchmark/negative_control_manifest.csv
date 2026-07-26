@@ -1,0 +1,6 @@
+control_id,source_baseline,transformation,equivalence_class,expected_scanner_relation,rationale
+NC001_COMMENT_ONLY,B001,Add a YAML comment before the build job.,parsed-object equality,identical normalized findings,YAML comments are discarded by the parser and cannot change workflow execution.
+NC002_SEQUENCE_STYLE,B002,Convert matrix lists from YAML flow style to block style.,parsed-object equality,identical normalized findings,Flow and block sequence syntax represent the same ordered YAML sequence.
+NC003_QUOTE_STYLE,B003,Change quoting style for equivalent scalar values.,parsed-object equality,identical normalized findings,The resulting YAML scalar values are unchanged after parsing.
+NC004_EVENT_KEY_ORDER,B004,Reverse the order of push and pull_request mapping keys.,parsed-object equality ignoring mapping order,identical normalized findings,YAML mapping-key order does not alter the set or configuration of workflow triggers.
+NC005_EXPLICIT_SUCCESS,B005,Add an explicit job-level if: ${{ success() }} condition.,normalized operational equality,identical normalized findings,GitHub Actions applies success() as the implicit default job condition when no status-check condition is supplied.

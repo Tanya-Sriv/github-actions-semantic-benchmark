@@ -1,0 +1,20 @@
+schema_version: "0.1"
+baseline_id: B004
+title: "Trigger and path coverage baseline"
+category: "trigger_intent"
+source_type: synthetic
+license: MIT
+workflow_files:
+  - .github/workflows/ci.yml
+fixture_language: Python
+fixture_entrypoint: pytest -q
+execution_required: true
+applicable_operators:
+  - TR01
+  - TR02
+confidentiality:
+  employer_data_used: false
+  proprietary_code_used: false
+  public_repository_code_copied: false
+notes:
+  - Independently created synthetic fixture for benchmark use.
