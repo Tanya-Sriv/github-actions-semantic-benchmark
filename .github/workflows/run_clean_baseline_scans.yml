@@ -49,10 +49,24 @@ jobs:
           zizmor --version
           poutine version
 
-      - name: Locate baseline workflows
+      # - name: Locate baseline workflows
+      #   run: |
+      #     echo "Repository workflow files:"
+      #     find . -type f \( -name "*.yml" -o -name "*.yaml" \) | sort
+      - name: Locate benchmark workflows
         run: |
-          echo "Repository workflow files:"
-          find . -type f \( -name "*.yml" -o -name "*.yaml" \) | sort
+          echo "Current directory:"
+          pwd
+      
+          echo "Top-level files:"
+          find . -maxdepth 3 -type d | sort
+      
+          echo "All benchmark workflow files:"
+          find . \
+            -type f \
+            -path "*/baselines/*/.github/workflows/*" \
+            \( -name "*.yml" -o -name "*.yaml" \) \
+            | sort
 
       - name: Create result directories
         run: |
