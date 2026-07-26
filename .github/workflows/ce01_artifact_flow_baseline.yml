@@ -18,7 +18,10 @@ jobs:
           set -euo pipefail
           mkdir -p dist
           printf 'ce01-artifact-flow\n' > dist/package.txt
-          sha256sum dist/package.txt | tee dist/package.sha256
+          (
+            cd dist
+            sha256sum package.txt | tee package.sha256
+          )
 
       - name: Record expected artifact state
         id: record
