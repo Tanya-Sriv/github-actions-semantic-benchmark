@@ -1,0 +1,64 @@
+schema_version: '0.1'
+mutant_id: B001_CF01_001
+baseline_id: B001
+operator_id: CF01
+oracle_strength: O3
+fault_class: dependency
+expected_fault: A required needs edge is removed from the artifact consumer.
+preconditions:
+- id: P1
+  description: 'The verify job declares needs: build.'
+  verification: static_check
+- id: P2
+  description: The intent manifest requires build -> verify because verify consumes build output.
+  verification: manual_review
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.verify.needs
+  before: build
+  after: null
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: bb289fd2f9a048dd784761db2897e43940b98d5a123483193ae5ea3b1647ea3c
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: B001 required_dependencies[0]
+  - type: objective_relation
+    reference: The verify job consumes an artifact produced by build
+  violated_property: Declared producer-consumer ordering must be preserved.
+  expected_behavior: Build and verify may run without the intended ordering, so verify can attempt consumption before production.
+  execution_confirmation_required: !!bool 'true'
+  execution_confirmation_status: pending
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies the missing required dependency edge.
+  - Diagnostic identifies a consumer that is not ordered after its producer.
+  does_not_count_as_detection:
+  - A generic warning that jobs may run in parallel.
+  - Any unrelated job graph warning.
+  acceptable_equivalent_diagnostics:
+  - verify must depend on build because it consumes build's artifact.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Compare actual dependency graph with intent-required edges and artifact flow.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- The missing edge is valid GitHub Actions syntax.
+- Execution scheduling is nondeterministic, so static intent remains the primary oracle.

@@ -1,0 +1,63 @@
+schema_version: '0.1'
+mutant_id: B003_CF02_001
+baseline_id: B003
+operator_id: CF02
+oracle_strength: O3
+fault_class: failure_handling
+expected_fault: The summary job loses always() and becomes unreachable after a failed test job.
+preconditions:
+- id: P1
+  description: summarize depends on test.
+  verification: static_check
+- id: P2
+  description: The intent manifest requires summarize to run regardless of test outcome.
+  verification: manual_review
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.summarize.if
+  before: ${{ always() }}
+  after: null
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: 627dfdd8f8479ddbd6cd951805f3df0c7ed2d57972cc3d8d21643f394c3538a3
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: B003 required_failure_handlers entry for summarize
+  - type: github_specification
+    reference: Default dependent-job success condition
+  violated_property: Required post-failure reporting jobs must remain reachable after upstream failure.
+  expected_behavior: When test fails, summarize is skipped under the default success condition.
+  execution_confirmation_required: !!bool 'true'
+  execution_confirmation_status: pending
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies that summarize is not reachable after test failure.
+  - Diagnostic identifies removal of the required always() condition.
+  does_not_count_as_detection:
+  - A generic warning that summarize depends on test.
+  - A style warning about explicit conditions.
+  acceptable_equivalent_diagnostics:
+  - summarize must use always() to report failed test outcomes.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Model default dependent-job conditions and intent-required failure paths.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- Controlled execution should verify the skipped summary path.

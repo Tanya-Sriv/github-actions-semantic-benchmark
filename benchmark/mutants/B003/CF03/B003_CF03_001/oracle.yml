@@ -1,0 +1,61 @@
+schema_version: '0.1'
+mutant_id: B003_CF03_001
+baseline_id: B003
+operator_id: CF03
+oracle_strength: O3
+fault_class: failure_handling
+expected_fault: The summary job is changed to run only when the upstream test fails, contradicting its always-run intent.
+preconditions:
+- id: P1
+  description: summarize is intended to run for both success and failure.
+  verification: manual_review
+- id: P2
+  description: The baseline condition is always().
+  verification: static_check
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.summarize.if
+  before: ${{ always() }}
+  after: ${{ failure() }}
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: faecdec618dad0a96ffbda1aafe3cefe289215506074be7f6a7d02098b0ada69
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: B003 required_failure_handlers entry for summarize
+  violated_property: Required reporting must execute for all declared terminal outcomes.
+  expected_behavior: Successful test runs no longer execute summarize.
+  execution_confirmation_required: !!bool 'true'
+  execution_confirmation_status: pending
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies that failure() is narrower than the declared always-run requirement.
+  - Diagnostic reports that summarize is unreachable on successful test paths.
+  does_not_count_as_detection:
+  - A generic condition warning.
+  - Any warning only about syntax validity.
+  acceptable_equivalent_diagnostics:
+  - summarize must remain reachable on both success and failure paths.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Compare condition reachability with intent-required outcomes.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- Controlled execution should test both success and failure fixtures.

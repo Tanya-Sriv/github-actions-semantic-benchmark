@@ -1,0 +1,63 @@
+schema_version: '0.1'
+mutant_id: B003_RL03_001
+baseline_id: B003
+operator_id: RL03
+oracle_strength: O3
+fault_class: failure_handling
+expected_fault: The failure-log upload condition is reversed from failure() to success().
+preconditions:
+- id: P1
+  description: The upload-failure-logs step exists.
+  verification: static_check
+- id: P2
+  description: The intent manifest declares it as an on-failure artifact handler.
+  verification: manual_review
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.test.steps[id=upload-failure-logs].if
+  before: ${{ failure() }}
+  after: ${{ success() }}
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: d52ee7965c940c1ebaea7c2a27bdd281422d1576985e27fe6ea85d3ed3c6467f
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: 'B003 artifact required_when: on_failure'
+  - type: intent_manifest
+    reference: B003 required_failure_handlers artifact condition
+  violated_property: Failure evidence handlers must be reachable on the declared failure outcome.
+  expected_behavior: Logs are uploaded on successful runs and omitted when tests fail.
+  execution_confirmation_required: !!bool 'true'
+  execution_confirmation_status: pending
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies mismatch between success() and the declared failure-handler role.
+  - Diagnostic reports that failure logs are not reachable on failure.
+  does_not_count_as_detection:
+  - A generic condition warning.
+  - A warning only about artifact upload.
+  acceptable_equivalent_diagnostics:
+  - Failure-log handler must use a failure-reachable condition.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Compare handler role and declared outcome with actual condition.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- Controlled success and failure runs should confirm both sides of the reversal.

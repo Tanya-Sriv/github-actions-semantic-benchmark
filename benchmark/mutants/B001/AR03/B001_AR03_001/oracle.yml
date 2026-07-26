@@ -1,0 +1,66 @@
+schema_version: '0.1'
+mutant_id: B001_AR03_001
+baseline_id: B001
+operator_id: AR03
+oracle_strength: O2
+fault_class: artifact_dataflow
+expected_fault: Artifact production becomes conditional while the downstream consumer remains unconditionally reachable.
+preconditions:
+- id: P1
+  description: The build job always reaches the upload-package step after a successful build-package step.
+  verification: static_check
+- id: P2
+  description: The verify job depends on build and unconditionally downloads the artifact.
+  verification: static_check
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.build.steps[id=upload-package].if
+  before: null
+  after: ${{ github.ref == 'refs/heads/release' }}
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: 3304125a01d43cb87c71f9f7477b62d1b0e303a350f912ddf9a6d74d3bbd37cd
+ground_truth:
+  basis:
+  - type: objective_relation
+    reference: Reachability relation between producer step and consumer job
+  - type: intent_manifest
+    reference: B001 artifact is required on successful pull-request execution
+  violated_property: A required consumer must not be reachable on a path where its only producer is skipped.
+  expected_behavior: On ordinary pull-request refs, build can succeed without producing the artifact, while verify still attempts
+    to download it.
+  execution_confirmation_required: !!bool 'true'
+  execution_confirmation_status: pending
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies a reachable consumer path with no reachable artifact producer.
+  - Diagnostic identifies that the producer condition is incompatible with the consumer's unconditional reachability.
+  does_not_count_as_detection:
+  - A generic conditional-step warning.
+  - A warning only about branch naming.
+  - A warning already present in B001.
+  acceptable_equivalent_diagnostics:
+  - Artifact producer may be skipped on a path where verify still executes.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Perform condition-aware producer-consumer reachability analysis.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- Precise GitHub condition semantics are simplified in the checker.
+- Controlled execution is required to confirm the selected event/ref path.

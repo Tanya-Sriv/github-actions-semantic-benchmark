@@ -1,0 +1,66 @@
+schema_version: '0.1'
+mutant_id: B001_AR01_001
+baseline_id: B001
+operator_id: AR01
+oracle_strength: O2
+fault_class: artifact_dataflow
+expected_fault: Producer artifact name changes while the consumer continues to request the original artifact.
+preconditions:
+- id: P1
+  description: The workflow contains one upload-artifact producer named package-${{ github.sha }}.
+  verification: static_check
+- id: P2
+  description: The verify job downloads package-${{ github.sha }}.
+  verification: static_check
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.build.steps[id=upload-package].with.name
+  before: package-${{ github.sha }}
+  after: package-mutated-${{ github.sha }}
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: 81e42bb67f3fbbefe12d0f33565dfcff7ef0df2bcf5dae301b970c8182a70ceb
+ground_truth:
+  basis:
+  - type: objective_relation
+    reference: B001 artifact producer-consumer relation
+  - type: intent_manifest
+    reference: B001 intent expectations.artifacts[0]
+  violated_property: Every required artifact consumer must resolve to at least one reachable producer with the same logical
+    identity.
+  expected_behavior: The verify job requests an artifact for which no producer exists.
+  execution_confirmation_required: !!bool 'false'
+  execution_confirmation_status: not_required
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies that verify downloads an artifact name not produced by build.
+  - Diagnostic identifies a producer-consumer artifact name mismatch.
+  does_not_count_as_detection:
+  - Generic upload-artifact warning.
+  - Any warning already present in B001.
+  - A warning about retention or hidden files.
+  acceptable_equivalent_diagnostics:
+  - No producer found for requested artifact package-${{ github.sha }}.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Resolve upload and download artifact identities across jobs.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- This oracle assumes exact artifact-name matching.
+- Execution confirmation is useful but not required for the static mismatch.

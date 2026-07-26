@@ -1,0 +1,60 @@
+schema_version: '0.1'
+mutant_id: B003_RL01_001
+baseline_id: B003
+operator_id: RL01
+oracle_strength: O3
+fault_class: failure_handling
+expected_fault: The blocking run-tests step is made non-blocking.
+preconditions:
+- id: P1
+  description: run-tests is listed as blocking.
+  verification: manual_review
+- id: P2
+  description: The baseline step has no continue-on-error.
+  verification: static_check
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.test.steps[id=run-tests].continue-on-error
+  before: null
+  after: !!bool 'true'
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: dc01c66d21a87921ac6284514e997a49f117978abf949b0e5a8530164c389bc8
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: B003 failure_semantics.blocking_steps
+  violated_property: Required test failures must propagate.
+  expected_behavior: A failing pytest command can be tolerated instead of failing the job.
+  execution_confirmation_required: !!bool 'true'
+  execution_confirmation_status: pending
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies continue-on-error on run-tests as violating blocking intent.
+  does_not_count_as_detection:
+  - A generic mention of continue-on-error without relating it to blocking intent.
+  - Any unrelated shell warning.
+  acceptable_equivalent_diagnostics:
+  - run-tests is required to remain blocking.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Check continue-on-error against declared blocking steps.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- Requires a controlled failing fixture to confirm outcome propagation.

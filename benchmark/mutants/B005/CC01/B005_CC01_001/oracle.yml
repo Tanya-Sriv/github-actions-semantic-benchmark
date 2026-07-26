@@ -1,0 +1,64 @@
+schema_version: '0.1'
+mutant_id: B005_CC01_001
+baseline_id: B005
+operator_id: CC01
+oracle_strength: O3
+fault_class: concurrency
+expected_fault: The CI concurrency group is changed from its workflow-specific key to a repository-global shared key.
+preconditions:
+- id: P1
+  description: The CI workflow uses the workflow-specific concurrency group ci-main.
+  verification: static_check
+- id: P2
+  description: The intent requires CI to remain isolated from release workflow concurrency.
+  verification: manual_review
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: concurrency.group
+  before: ci-main
+  after: global
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: 0d19dcde87d54bad5faefdb63608519531fc17452892ba6b6d4de256e3f4882f
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: B005 concurrency entry for ci.yml
+  - type: github_specification
+    reference: Concurrency groups cancel or serialize matching keys
+  violated_property: Concurrency keys must preserve the declared workflow-level isolation boundary.
+  expected_behavior: CI runs share one repository-global key, so unrelated CI executions can cancel or serialize one another.
+  execution_confirmation_required: !!bool 'true'
+  execution_confirmation_status: pending
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies that the CI concurrency key violates the declared workflow-level isolation.
+  - Diagnostic reports that unrelated CI runs share one global concurrency group.
+  does_not_count_as_detection:
+  - A generic statement that cancel-in-progress is enabled.
+  - Any warning only about string formatting.
+  acceptable_equivalent_diagnostics:
+  - CI concurrency group is broader than the declared workflow isolation.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Analyze concurrency key expressions against declared isolation scope.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- Execution confirmation requires overlapping runs.
+- Timing may affect observed cancellation.

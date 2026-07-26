@@ -1,0 +1,40 @@
+name: artifact-flow-baseline
+on:
+  pull_request:
+    branches:
+    - main
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - id: build-package
+      run: 'mkdir -p dist
+
+        echo "artifact payload" > dist/package.txt
+
+        '
+    - id: upload-package
+      uses: actions/upload-artifact@v4
+      with:
+        name: package-${{ github.sha }}
+        path: dist/package.txt
+      if: ${{ github.ref == 'refs/heads/release' }}
+  verify:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: package-${{ github.sha }}
+        path: received
+    - run: test -f received/package.txt

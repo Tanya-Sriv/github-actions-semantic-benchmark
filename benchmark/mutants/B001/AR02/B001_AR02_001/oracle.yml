@@ -1,0 +1,64 @@
+schema_version: '0.1'
+mutant_id: B001_AR02_001
+baseline_id: B001
+operator_id: AR02
+oracle_strength: O2
+fault_class: artifact_dataflow
+expected_fault: Consumer artifact name changes while the producer retains the original artifact name.
+preconditions:
+- id: P1
+  description: The build job uploads package-${{ github.sha }}.
+  verification: static_check
+- id: P2
+  description: The verify job contains one download-artifact step.
+  verification: static_check
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.verify.steps[uses=actions/download-artifact@v4].with.name
+  before: package-${{ github.sha }}
+  after: package-consumer-${{ github.sha }}
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: 17af93c7eece53f04c2efcec2797dc1681ee3828615f85c079abe7d5a5f981f0
+ground_truth:
+  basis:
+  - type: objective_relation
+    reference: B001 artifact producer-consumer relation
+  - type: intent_manifest
+    reference: B001 intent expectations.artifacts[0]
+  violated_property: Every required artifact consumer must request an artifact produced by a reachable upstream job.
+  expected_behavior: The verify job requests package-consumer-${{ github.sha }}, which build never uploads.
+  execution_confirmation_required: !!bool 'false'
+  execution_confirmation_status: not_required
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies the unmatched consumer artifact name.
+  - Diagnostic links the missing artifact to the changed download step.
+  does_not_count_as_detection:
+  - Generic missing-file warning inside the shell step.
+  - Any warning already present in B001.
+  - A warning unrelated to artifact identity.
+  acceptable_equivalent_diagnostics:
+  - Artifact package-consumer-${{ github.sha }} has no producer.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Match consumer artifact names to upstream producer names.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- Dynamic expression values are compared symbolically, not by executing the workflow.

@@ -1,0 +1,69 @@
+schema_version: '0.1'
+mutant_id: B005_CC02_001
+baseline_id: B005
+operator_id: CC02
+oracle_strength: O3
+fault_class: concurrency
+expected_fault: The release workflow reuses the CI workflow's concurrency group, creating a cross-workflow collision.
+preconditions:
+- id: P1
+  description: The CI workflow uses concurrency group ci-main.
+  verification: static_check
+- id: P2
+  description: The release workflow uses concurrency group release-main.
+  verification: static_check
+- id: P3
+  description: The intent declares CI and release workflows non-colliding.
+  verification: manual_review
+mutation:
+  target_file: .github/workflows/release.yml
+  target_path: concurrency.group
+  before: release-main
+  after: ci-main
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: db74aaa80f0cc237e90deb89e308d7a345f7bc26669368f1515e77647468e5dc
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: B005 concurrency must_not_collide_with entries
+    notes: The manifest explicitly declares the workflows independent.
+  - type: objective_relation
+    reference: Both workflows resolve to the exact concurrency group ci-main
+    notes: The collision follows directly from equal resolved group keys.
+  violated_property: Workflows declared non-colliding must not resolve to the same concurrency group.
+  expected_behavior: A release run and a CI run can cancel or serialize one another because both resolve to ci-main.
+  execution_confirmation_required: !!bool 'true'
+  execution_confirmation_status: confirmed
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies identical concurrency groups across workflows declared independent.
+  - Diagnostic reports a cross-workflow cancellation or serialization risk caused by the shared ci-main key.
+  does_not_count_as_detection:
+  - A warning only within one workflow.
+  - A generic concurrency recommendation.
+  acceptable_equivalent_diagnostics:
+  - Release and CI workflows share the forbidden concurrency key ci-main.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Build a repository-level concurrency-key collision graph.
+manual_review:
+  required: !!bool 'true'
+  review_status: completed
+  review_notes: Six valid controlled trials confirmed serialization in CI-then-release order and cancellation in reverse order.
+limitations:
+- Repository-level analysis is required.
+- Controlled overlapping runs are required for O4 confirmation of cancellation behavior.

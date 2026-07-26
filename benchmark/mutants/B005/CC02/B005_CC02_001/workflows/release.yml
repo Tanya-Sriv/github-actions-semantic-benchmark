@@ -1,0 +1,17 @@
+name: concurrency-release-baseline
+on:
+  workflow_dispatch: null
+permissions:
+  contents: read
+concurrency:
+  group: ci-main
+  cancel-in-progress: !!bool 'false'
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
+    - run: echo "release"
