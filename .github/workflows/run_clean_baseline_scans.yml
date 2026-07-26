@@ -19,7 +19,7 @@ jobs:
       - name: Locate benchmark baselines
         run: |
           find benchmark/baselines \
-            -path "*/.github/workflows/*" \
+            -path "*/workflows/*" \
             -type f \( -name "*.yml" -o -name "*.yaml" \) \
             | sort
 
@@ -78,8 +78,9 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
+      
           find benchmark/baselines \
-            -path "*/.github/workflows/*" \
+            -path "*/workflows/*" \
             -type f \( -name "*.yml" -o -name "*.yaml" \) \
             -print0 |
             xargs -0 actionlint \
@@ -122,14 +123,10 @@ jobs:
           set -o pipefail
           mkdir -p scanner-results/zizmor
       
-          find . \
-            -type f \
-            -path "*/benchmark/baselines/*/.github/workflows/*" \
-            \( -name "*.yml" -o -name "*.yaml" \) \
+          find benchmark/baselines \
+            -path "*/workflows/*" \
+            -type f \( -name "*.yml" -o -name "*.yaml" \) \
             | sort > scanner-results/zizmor/input-files.txt
-      
-          echo "Workflow files found:"
-          cat scanner-results/zizmor/input-files.txt
       
           count=$(wc -l < scanner-results/zizmor/input-files.txt)
           echo "Auditing ${count} workflow files"
@@ -146,7 +143,7 @@ jobs:
             --format json \
             --no-exit-codes \
             "${workflows[@]}" \
-            > scanner-results/zizmor/results.json 2>&1    
+            > scanner-results/zizmor/results.json 2>&1   
 
       - name: Run poutine on B001-B005
         continue-on-error: true
