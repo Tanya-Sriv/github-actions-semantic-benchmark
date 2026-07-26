@@ -1,0 +1,108 @@
+name: Run clean baseline scans
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan-baselines:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install actionlint
+        run: |
+          curl -sSfL \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz \
+            -o actionlint.tar.gz
+          tar -xzf actionlint.tar.gz
+          sudo install actionlint /usr/local/bin/actionlint
+
+      - name: Install zizmor
+        run: |
+          python -m pip install --disable-pip-version-check "zizmor==1.28.0"
+
+      - name: Install poutine
+        run: |
+          curl -sSfL \
+            https://github.com/boostsecurityio/poutine/releases/download/v1.1.4/poutine_Linux_x86_64.tar.gz \
+            -o poutine.tar.gz
+          tar -xzf poutine.tar.gz
+          sudo install poutine /usr/local/bin/poutine
+
+      - name: Verify tools
+        run: |
+          actionlint -version
+          zizmor --version
+          poutine version
+
+      - name: Locate baseline workflows
+        run: |
+          echo "Repository workflow files:"
+          find . -type f \( -name "*.yml" -o -name "*.yaml" \) | sort
+
+      - name: Create result directories
+        run: |
+          mkdir -p scanner-results/actionlint
+          mkdir -p scanner-results/zizmor
+          mkdir -p scanner-results/poutine
+
+      - name: Run actionlint
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          actionlint \
+            -format '{{json .}}' \
+            2>&1 | tee scanner-results/actionlint/results.jsonl
+
+      - name: Run zizmor
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -o pipefail
+          zizmor . \
+            --format json \
+            2>&1 | tee scanner-results/zizmor/results.json
+
+      - name: Run poutine
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          poutine analyze_local . \
+            --format json \
+            2>&1 | tee scanner-results/poutine/results.json
+
+      - name: Save tool versions
+        run: |
+          {
+            echo "actionlint:"
+            actionlint -version
+            echo
+            echo "zizmor:"
+            zizmor --version
+            echo
+            echo "poutine:"
+            poutine version
+          } > scanner-results/tool-versions.txt
+
+      - name: Save repository revision
+        run: |
+          {
+            echo "repository=${{ github.repository }}"
+            echo "commit=${{ github.sha }}"
+            echo "run_id=${{ github.run_id }}"
+            echo "run_attempt=${{ github.run_attempt }}"
+          } > scanner-results/run-metadata.txt
+
+      - name: Upload scanner results
+        uses: actions/upload-artifact@v4
+        with:
+          name: clean-baseline-scanner-results
+          path: scanner-results/
+          if-no-files-found: error
+          retention-days: 30
