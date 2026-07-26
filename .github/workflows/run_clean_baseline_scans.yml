@@ -60,13 +60,13 @@ jobs:
             2>&1 | tee scanner-results/actionlint/results.jsonl
 
       - name: Run zizmor
-        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -o pipefail
           zizmor . \
             --format json \
+            --no-exit-codes \
             2>&1 | tee scanner-results/zizmor/results.json
 
       - name: Run poutine
