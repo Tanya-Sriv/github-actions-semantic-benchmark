@@ -19,6 +19,7 @@ jobs:
       - name: Locate benchmark baselines
         run: |
           find benchmark/baselines \
+            -path "*/.github/workflows/*" \
             -type f \( -name "*.yml" -o -name "*.yaml" \) \
             | sort
 
@@ -77,9 +78,26 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -o pipefail
-          zizmor benchmark/baselines \
+      
+          mapfile -d '' workflows < <(
+            find benchmark/baselines \
+              -path "*/.github/workflows/*" \
+              -type f \( -name "*.yml" -o -name "*.yaml" \) \
+              -print0
+          )
+      
+          printf 'Auditing %s workflow files\n' "${#workflows[@]}"
+          printf '%s\n' "${workflows[@]}"
+      
+          if [ "${#workflows[@]}" -eq 0 ]; then
+            echo "No benchmark workflow files found."
+            exit 1
+          fi
+      
+          zizmor \
             --format json \
             --no-exit-codes \
+            "${workflows[@]}" \
             2>&1 | tee scanner-results/zizmor/results.json
 
       - name: Run poutine on B001-B005
