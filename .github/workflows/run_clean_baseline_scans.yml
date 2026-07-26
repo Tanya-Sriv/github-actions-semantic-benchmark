@@ -18,8 +18,8 @@ jobs:
 
       - name: Locate benchmark baselines
         run: |
-          find . -type f \( -name "*.yml" -o -name "*.yaml" \) \
-            | grep -E 'B001|B002|B003|B004|B005|baseline' \
+          find benchmark/baselines \
+            -type f \( -name "*.yml" -o -name "*.yaml" \) \
             | sort
 
       - name: Install actionlint
@@ -59,30 +59,34 @@ jobs:
           mkdir -p scanner-results/zizmor
           mkdir -p scanner-results/poutine
 
-      - name: Run actionlint
+      - name: Run actionlint on B001-B005
         continue-on-error: true
         run: |
           set -o pipefail
-          actionlint \
-            -format '{{json .}}' \
+          find benchmark/baselines \
+            -path "*/.github/workflows/*" \
+            -type f \( -name "*.yml" -o -name "*.yaml" \) \
+            -print0 |
+            xargs -0 actionlint \
+              -format '{{json .}}' \
             2>&1 | tee scanner-results/actionlint/results.jsonl
 
-      - name: Run zizmor
+      - name: Run zizmor on B001-B005
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -o pipefail
-          zizmor . \
+          zizmor benchmark/baselines \
             --format json \
             --no-exit-codes \
             2>&1 | tee scanner-results/zizmor/results.json
 
-      - name: Run poutine
+      - name: Run poutine on B001-B005
         continue-on-error: true
         run: |
           set -o pipefail
-          poutine analyze_local . \
+          poutine analyze_local benchmark/baselines \
             --format json \
             2>&1 | tee scanner-results/poutine/results.json
 
