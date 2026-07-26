@@ -86,33 +86,48 @@ jobs:
               -format '{{json .}}' \
             2>&1 | tee scanner-results/actionlint/results.jsonl
 
-      - name: Run zizmor on B001-B005
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
+      # - name: Run zizmor on B001-B005
+      #   continue-on-error: true
+      #   env:
+      #     GH_TOKEN: ${{ github.token }}
+      #   run: |
+      #     set -o pipefail
+      
+      #     mapfile -d '' workflows < <(
+      #       find benchmark/baselines \
+      #         -path "*/.github/workflows/*" \
+      #         -type f \( -name "*.yml" -o -name "*.yaml" \) \
+      #         -print0
+      #     )
+      
+      #     printf 'Auditing %s workflow files\n' "${#workflows[@]}"
+      #     printf '%s\n' "${workflows[@]}"
+      
+      #     if [ "${#workflows[@]}" -eq 0 ]; then
+      #       echo "No benchmark workflow files found."
+      #       exit 1
+      #     fi
+      
+      #     zizmor \
+      #       --format json \
+      #       --no-exit-codes \
+      #       "${workflows[@]}" \
+      #       2>&1 | tee scanner-results/zizmor/results.json
+
+      - name: Locate benchmark workflows
         run: |
-          set -o pipefail
+          echo "Current directory:"
+          pwd
       
-          mapfile -d '' workflows < <(
-            find benchmark/baselines \
-              -path "*/.github/workflows/*" \
-              -type f \( -name "*.yml" -o -name "*.yaml" \) \
-              -print0
-          )
+          echo "Top-level files:"
+          find . -maxdepth 3 -type d | sort
       
-          printf 'Auditing %s workflow files\n' "${#workflows[@]}"
-          printf '%s\n' "${workflows[@]}"
-      
-          if [ "${#workflows[@]}" -eq 0 ]; then
-            echo "No benchmark workflow files found."
-            exit 1
-          fi
-      
-          zizmor \
-            --format json \
-            --no-exit-codes \
-            "${workflows[@]}" \
-            2>&1 | tee scanner-results/zizmor/results.json
+          echo "All benchmark workflow files:"
+          find . \
+            -type f \
+            -path "*/baselines/*/.github/workflows/*" \
+            \( -name "*.yml" -o -name "*.yaml" \) \
+            | sort
 
       - name: Run poutine on B001-B005
         continue-on-error: true
