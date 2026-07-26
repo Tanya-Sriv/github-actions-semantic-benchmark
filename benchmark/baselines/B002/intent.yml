@@ -1,0 +1,32 @@
+schema_version: "0.1"
+baseline_id: B002
+intent_version: "1.0"
+description: All four declared operating-system and Python-version combinations are required.
+scope:
+  platform: github-actions
+  workflow_files:
+    - .github/workflows/ci.yml
+  repository_fixture: fixture
+expectations:
+  required_events: [pull_request]
+  required_jobs: [test]
+  required_matrix:
+    test.os:
+      required_values: [ubuntu-latest, windows-latest]
+      all_combinations_required: true
+      fail_fast_allowed: false
+    test.python:
+      required_values: ["3.11", "3.12"]
+      all_combinations_required: true
+      fail_fast_allowed: false
+  failure_semantics:
+    blocking_jobs: [test]
+    blocking_steps:
+      - job: test
+        step_id: run-tests
+  timeouts:
+    - job: test
+      required: true
+      maximum_minutes: 20
+notes:
+  - Matrix completeness is intent-defined rather than universally required.

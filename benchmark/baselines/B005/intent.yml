@@ -1,0 +1,33 @@
+schema_version: "0.1"
+baseline_id: B005
+intent_version: "1.0"
+description: CI runs are isolated by workflow and ref and must never cancel independent release runs.
+scope:
+  platform: github-actions
+  workflow_files:
+    - .github/workflows/ci.yml
+    - .github/workflows/release.yml
+  repository_fixture: fixture
+expectations:
+  required_events: [pull_request, workflow_dispatch]
+  required_jobs: [test, package]
+  concurrency:
+    - workflow: .github/workflows/ci.yml
+      isolation_scope: branch
+      cancel_in_progress: true
+      must_not_collide_with:
+        - .github/workflows/release.yml
+    - workflow: .github/workflows/release.yml
+      isolation_scope: workflow
+      cancel_in_progress: false
+      must_not_collide_with:
+        - .github/workflows/ci.yml
+  timeouts:
+    - job: test
+      required: true
+      maximum_minutes: 15
+    - job: package
+      required: true
+      maximum_minutes: 15
+notes:
+  - Cross-workflow concurrency isolation requires repository-level analysis.

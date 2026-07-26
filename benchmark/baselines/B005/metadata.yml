@@ -1,0 +1,21 @@
+schema_version: "0.1"
+baseline_id: B005
+title: "Cross-workflow concurrency baseline"
+category: "concurrency"
+source_type: synthetic
+license: MIT
+workflow_files:
+  - .github/workflows/ci.yml
+  - .github/workflows/release.yml
+fixture_language: Python
+fixture_entrypoint: pytest -q
+execution_required: true
+applicable_operators:
+  - CC01
+  - CC02
+confidentiality:
+  employer_data_used: false
+  proprietary_code_used: false
+  public_repository_code_copied: false
+notes:
+  - Independently created synthetic fixture for benchmark use.
