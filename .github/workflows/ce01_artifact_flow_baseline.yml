@@ -1,0 +1,67 @@
+name: CE01 Artifact Flow Baseline
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact_expected: ${{ steps.record.outputs.expected }}
+    steps:
+      - name: Create deterministic package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          printf 'ce01-artifact-flow\n' > dist/package.txt
+          sha256sum dist/package.txt | tee dist/package.sha256
+
+      - name: Record expected artifact state
+        id: record
+        shell: bash
+        run: echo "expected=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload package artifact
+        id: upload-package
+        uses: actions/upload-artifact@v6
+        with:
+          name: ce01-package
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+  verify:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download package artifact
+        id: download-package
+        uses: actions/download-artifact@v5
+        with:
+          name: ce01-package
+          path: received/
+
+      - name: Verify artifact contents
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f received/package.txt
+          test -f received/package.sha256
+          (
+            cd received
+            sha256sum --check package.sha256
+          )
+          printf 'artifact_present=true\n' | tee verification.txt
+
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: ce01-baseline-evidence
+          path: verification.txt
+          if-no-files-found: warn
+          retention-days: 30
