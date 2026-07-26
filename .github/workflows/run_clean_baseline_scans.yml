@@ -120,28 +120,33 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -o pipefail
+          mkdir -p scanner-results/zizmor
       
-          mapfile -d '' workflows < <(
-            find . \
-              -type f \
-              -path "*/baselines/*/.github/workflows/*" \
-              \( -name "*.yml" -o -name "*.yaml" \) \
-              -print0
-          )
+          find . \
+            -type f \
+            -path "*/benchmark/baselines/*/.github/workflows/*" \
+            \( -name "*.yml" -o -name "*.yaml" \) \
+            | sort > scanner-results/zizmor/input-files.txt
       
-          printf 'Auditing %s workflow files\n' "${#workflows[@]}"
-          printf '%s\n' "${workflows[@]}"
+          echo "Workflow files found:"
+          cat scanner-results/zizmor/input-files.txt
       
-          if [ "${#workflows[@]}" -eq 0 ]; then
-            echo "No B001-B005 workflow files found."
+          count=$(wc -l < scanner-results/zizmor/input-files.txt)
+          echo "Auditing ${count} workflow files"
+      
+          if [ "$count" -ne 6 ]; then
+            echo "Expected 6 baseline workflow files, found ${count}" \
+              | tee scanner-results/zizmor/error.txt
             exit 1
           fi
+      
+          mapfile -t workflows < scanner-results/zizmor/input-files.txt
       
           zizmor \
             --format json \
             --no-exit-codes \
             "${workflows[@]}" \
-            2>&1 | tee scanner-results/zizmor/results.json
+            > scanner-results/zizmor/results.json 2>&1    
 
       - name: Run poutine on B001-B005
         continue-on-error: true
