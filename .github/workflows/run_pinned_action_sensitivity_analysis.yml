@@ -402,7 +402,7 @@ jobs:
             > pinned-sensitivity/key-files.sha256
 
       - name: Upload pinned sensitivity results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pinned-action-sensitivity-results
           path: pinned-sensitivity/
