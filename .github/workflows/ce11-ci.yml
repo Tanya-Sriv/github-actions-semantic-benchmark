@@ -18,7 +18,7 @@ jobs:
       - name: Record start time
         run: date -u +"%Y-%m-%dT%H:%M:%SZ"
       - name: Hold workflow for overlap
-        run: sleep 90
+        run: sleep 240
       - name: Record end time
         if: ${{ always() }}
         run: date -u +"%Y-%m-%dT%H:%M:%SZ"
