@@ -1,0 +1,60 @@
+schema_version: '0.1'
+mutant_id: B002_REF02_001
+baseline_id: B002
+operator_id: REF02
+oracle_strength: O2
+fault_class: objective_reference
+expected_fault: A step references an undefined matrix property.
+preconditions:
+- id: P1
+  description: The matrix defines os and python properties.
+  verification: static_check
+- id: P2
+  description: setup-python references matrix.python.
+  verification: static_check
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.test.steps[uses=actions/setup-python@v5].with.python-version
+  before: ${{ matrix.python }}
+  after: ${{ matrix.runtime }}
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: d8c8037524717b7aeefa32a6aef27c05094012ed4a59c119eb79747613def6a7
+ground_truth:
+  basis:
+  - type: objective_relation
+    reference: Matrix symbol table for jobs.test.strategy.matrix
+  violated_property: Every matrix property reference must resolve to a declared matrix property.
+  expected_behavior: matrix.runtime cannot be resolved because the matrix defines only os and python.
+  execution_confirmation_required: !!bool 'false'
+  execution_confirmation_status: not_required
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies undefined matrix property runtime.
+  does_not_count_as_detection:
+  - Generic expression warning that does not identify runtime.
+  - Any baseline warning.
+  acceptable_equivalent_diagnostics:
+  - Property runtime is not defined in matrix.
+expected_tool_behavior:
+  actionlint:
+    expectation: detect
+    basis: documented_capability
+    notes: Documented matrix property/type checking.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: ''
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: ''
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Resolve matrix property references.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- This is a positive semantic control rather than a novelty operator.

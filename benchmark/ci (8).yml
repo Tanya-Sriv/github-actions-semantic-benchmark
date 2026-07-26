@@ -1,0 +1,67 @@
+schema_version: '0.1'
+mutant_id: B004_TR01_001
+baseline_id: B004
+operator_id: TR01
+oracle_strength: O3
+fault_class: trigger_intent
+expected_fault: The required pull_request event is removed.
+preconditions:
+- id: P1
+  description: The baseline defines pull_request and push.
+  verification: static_check
+- id: P2
+  description: The intent manifest requires both events.
+  verification: manual_review
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: on.pull_request
+  before:
+    branches:
+    - main
+    paths:
+    - src/**
+    - tests/**
+    - pyproject.toml
+  after: null
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: 3a9e6b84e0bf47d67e8d4382bf6d1d9ef0c150b4ed619784a7b386b235a72c41
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: B004 required_events
+  violated_property: All declared validation events must remain configured.
+  expected_behavior: Pull requests to main no longer trigger validation.
+  execution_confirmation_required: !!bool 'false'
+  execution_confirmation_status: not_required
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies missing required pull_request event.
+  - Diagnostic reports incomplete declared event coverage.
+  does_not_count_as_detection:
+  - A generic observation that push remains configured.
+  - Any security warning unrelated to event completeness.
+  acceptable_equivalent_diagnostics:
+  - Required event pull_request is absent.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Compare configured events against intent-required events.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- This is intent-defined and not a universal requirement.

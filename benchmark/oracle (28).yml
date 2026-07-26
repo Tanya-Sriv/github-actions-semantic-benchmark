@@ -1,0 +1,61 @@
+schema_version: '0.1'
+mutant_id: B002_RL01_001
+baseline_id: B002
+operator_id: RL01
+oracle_strength: O3
+fault_class: failure_handling
+expected_fault: The required test step is made non-blocking with continue-on-error.
+preconditions:
+- id: P1
+  description: run-tests is declared as a blocking step in the intent manifest.
+  verification: manual_review
+- id: P2
+  description: The baseline run-tests step has no continue-on-error.
+  verification: static_check
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.test.steps[id=run-tests].continue-on-error
+  before: null
+  after: !!bool 'true'
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: 4ec31f5101b8f336b93881357f72a6a41ed0e5a42be93a06ec62baab7b489179
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: B002 failure_semantics.blocking_steps
+  violated_property: Failures in declared blocking test steps must propagate to the job and workflow result.
+  expected_behavior: A failing test command may be recorded as non-blocking, weakening the required pass/fail signal.
+  execution_confirmation_required: !!bool 'true'
+  execution_confirmation_status: pending
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies continue-on-error on a manifest-declared blocking test step.
+  - Diagnostic identifies failure masking for run-tests.
+  does_not_count_as_detection:
+  - A generic observation that continue-on-error is present.
+  - A warning about pytest itself.
+  acceptable_equivalent_diagnostics:
+  - Blocking step run-tests must not use continue-on-error.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Resolve blocking-step intent and failure propagation.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- A passing fixture does not expose the behavior; a controlled failing test is required.

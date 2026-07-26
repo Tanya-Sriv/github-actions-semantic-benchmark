@@ -1,0 +1,64 @@
+schema_version: '0.1'
+mutant_id: B002_MX01_001
+baseline_id: B002
+operator_id: MX01
+oracle_strength: O3
+fault_class: coverage_intent
+expected_fault: Windows is removed from a matrix that explicitly requires Windows and Linux coverage.
+preconditions:
+- id: P1
+  description: The matrix os axis contains ubuntu-latest and windows-latest.
+  verification: static_check
+- id: P2
+  description: The intent manifest requires both values.
+  verification: manual_review
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.test.strategy.matrix.os
+  before:
+  - ubuntu-latest
+  - windows-latest
+  after:
+  - ubuntu-latest
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: 4d4e664a9f65785f0bfc1a01c1016fe676d22f42f9dd8ecf6ba1b6f27c3c6563
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: B002 required_matrix.test.os
+  violated_property: All intent-required matrix values must remain present.
+  expected_behavior: The workflow no longer executes the required Windows test configurations.
+  execution_confirmation_required: !!bool 'false'
+  execution_confirmation_status: not_required
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies that windows-latest is missing from the required os axis.
+  - Diagnostic reports incomplete declared OS coverage.
+  does_not_count_as_detection:
+  - A generic matrix-size observation.
+  - A style warning about array formatting.
+  acceptable_equivalent_diagnostics:
+  - Required matrix value windows-latest is absent.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Compare matrix axes against required values in the intent manifest.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- This is not a universal GitHub Actions defect; it is specific to B002's declared coverage.

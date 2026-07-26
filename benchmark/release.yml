@@ -1,0 +1,64 @@
+schema_version: '0.1'
+mutant_id: B002_MX02_001
+baseline_id: B002
+operator_id: MX02
+oracle_strength: O3
+fault_class: coverage_intent
+expected_fault: The Python matrix dimension is collapsed from two required versions to one.
+preconditions:
+- id: P1
+  description: The python axis contains 3.11 and 3.12.
+  verification: static_check
+- id: P2
+  description: The intent manifest requires all combinations.
+  verification: manual_review
+mutation:
+  target_file: .github/workflows/ci.yml
+  target_path: jobs.test.strategy.matrix.python
+  before:
+  - '3.11'
+  - '3.12'
+  after:
+  - '3.12'
+  single_fault_expected: !!bool 'true'
+  mutant_sha256: 6cd542982d8823fec1af88cb33f28acd7e50e53fef57d827f7098bb1453ea8b7
+ground_truth:
+  basis:
+  - type: intent_manifest
+    reference: B002 required_matrix.test.python
+  violated_property: All required matrix-axis values and combinations must be preserved.
+  expected_behavior: Python 3.11 coverage and its associated OS combinations are removed.
+  execution_confirmation_required: !!bool 'false'
+  execution_confirmation_status: not_required
+detection_criteria:
+  counts_as_detection:
+  - Diagnostic identifies that Python 3.11 is missing.
+  - Diagnostic reports loss of required matrix combinations.
+  does_not_count_as_detection:
+  - A generic recommendation to reduce matrix size.
+  - Any warning not tied to declared coverage.
+  acceptable_equivalent_diagnostics:
+  - Required matrix value 3.11 is absent.
+expected_tool_behavior:
+  actionlint:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: No documented rule specifically covers this declared or cross-element operational relation.
+  zizmor:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Security-focused analysis is not expected to identify this non-security operational relation.
+  poutine:
+    expectation: likely_miss
+    basis: reasoned_expectation
+    notes: Built-in security rules are not expected to identify this non-security operational relation.
+  semantic_checker:
+    expectation: detect
+    basis: reasoned_expectation
+    notes: Compare matrix values and Cartesian coverage against the intent manifest.
+manual_review:
+  required: !!bool 'true'
+  review_status: not_started
+  review_notes: Regenerated after baseline and oracle revisions. Manual semantic re-review required.
+limitations:
+- The checker must normalize YAML numeric/string representations consistently.

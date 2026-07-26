@@ -1,0 +1,30 @@
+name: matrix-coverage-baseline
+on:
+  pull_request:
+    branches:
+    - main
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: !!bool 'false'
+      matrix:
+        os:
+        - ubuntu-latest
+        - windows-latest
+        python:
+        - '3.12'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python }}
+    - name: Install test dependencies
+      run: python -m pip install -r fixture/requirements.txt
+    - id: run-tests
+      run: python -m pytest -q
