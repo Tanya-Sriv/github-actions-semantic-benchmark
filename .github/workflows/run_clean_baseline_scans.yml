@@ -114,20 +114,34 @@ jobs:
       #       "${workflows[@]}" \
       #       2>&1 | tee scanner-results/zizmor/results.json
 
-      - name: Locate benchmark workflows
+      - name: Run zizmor on B001-B005
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          echo "Current directory:"
-          pwd
+          set -o pipefail
       
-          echo "Top-level files:"
-          find . -maxdepth 3 -type d | sort
+          mapfile -d '' workflows < <(
+            find . \
+              -type f \
+              -path "*/baselines/*/.github/workflows/*" \
+              \( -name "*.yml" -o -name "*.yaml" \) \
+              -print0
+          )
       
-          echo "All benchmark workflow files:"
-          find . \
-            -type f \
-            -path "*/baselines/*/.github/workflows/*" \
-            \( -name "*.yml" -o -name "*.yaml" \) \
-            | sort
+          printf 'Auditing %s workflow files\n' "${#workflows[@]}"
+          printf '%s\n' "${workflows[@]}"
+      
+          if [ "${#workflows[@]}" -eq 0 ]; then
+            echo "No B001-B005 workflow files found."
+            exit 1
+          fi
+      
+          zizmor \
+            --format json \
+            --no-exit-codes \
+            "${workflows[@]}" \
+            2>&1 | tee scanner-results/zizmor/results.json
 
       - name: Run poutine on B001-B005
         continue-on-error: true
