@@ -13,7 +13,7 @@ Install:
 
 Create a new empty repository named:
 
-`github-actions-semantic-benchmark-pilot`
+`github-actions-semantic-benchmark`
 
 Recommended settings:
 
@@ -32,7 +32,7 @@ cd github-actions-controlled-execution-repository
 git init
 git branch -M main
 git add .
-git commit -m "Initialize controlled execution pilot"
+git commit -m "Initialize controlled execution"
 ```
 
 ## Connect the GitHub remote
@@ -40,7 +40,7 @@ git commit -m "Initialize controlled execution pilot"
 Replace `YOUR-ACCOUNT`:
 
 ```bash
-git remote add origin https://github.com/YOUR-ACCOUNT/github-actions-semantic-benchmark-pilot.git
+git remote add origin https://github.com/YOUR-ACCOUNT/github-actions-semantic-benchmark.git
 git push -u origin main
 ```
 

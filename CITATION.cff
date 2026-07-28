@@ -1,10 +1,32 @@
 cff-version: 1.2.0
-message: "Please cite the archived release associated with the paper."
-title: "GitHub Actions Controlled-Execution Pilot"
+message: "If you use this benchmark or its artifacts, please cite the archived release and associated paper."
+
+title: "GitHub Actions Semantic Benchmark"
 type: software
+
 authors:
-  - family-names: "REPLACE"
-    given-names: "REPLACE"
-version: 0.1.0
-date-released: 2026-07-25
-license: MIT
+  - family-names: "Srivastava"
+    given-names: "Tanya"
+
+version: "1.0.0"
+
+repository-code: "https://github.com/Tanya-Sriv/github-actions-semantic-benchmark"
+url: "https://github.com/Tanya-Sriv/github-actions-semantic-benchmark"
+
+license: "MIT"
+
+keywords:
+  - GitHub Actions
+  - semantic analysis
+  - mutation testing
+  - CI/CD
+  - workflow analysis
+  - software testing
+
+preferred-citation:
+  type: article
+  title: "Valid Files, Broken Pipelines: A Mutation-Based Evaluation of Semantic Error Detection in GitHub Actions Workflows"
+  authors:
+    - family-names: "Srivastava"
+      given-names: "Tanya"
+  year: 2026
