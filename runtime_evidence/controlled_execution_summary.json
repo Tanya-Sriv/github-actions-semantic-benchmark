@@ -1,0 +1,123 @@
+{
+  "package": "controlled_execution_confirmed_results",
+  "cases": [
+    {
+      "case_id": "CE08",
+      "mutant_id": "B003_RL02_001",
+      "status": "confirmed",
+      "baseline_run_id": "30180196081",
+      "mutant_run_id": "30180205558",
+      "baseline_result": "workflow failure with failure artifact present",
+      "mutant_result": "workflow success with failure artifact suppressed",
+      "workflow_sha256": "bf60b7dcae9061f11d94651c4861b3d00539b32e8c6a860e2be7a6efebc32f26"
+    },
+    {
+      "case_id": "CE11",
+      "mutant_id": "B005_CC02_001",
+      "status": "confirmed",
+      "valid_mutant_trials": 6,
+      "ci_then_release_serialization_confirmed": "3/3",
+      "release_then_ci_cancellation_confirmed": "3/3",
+      "trials": [
+        {
+          "trial_id": "CE11-M1",
+          "order": "ci_then_release",
+          "ci_run_id": "30183768327",
+          "release_run_id": "30183772751",
+          "ci_started_at": "2026-07-26T01:58:37Z",
+          "ci_completed_at": "2026-07-26T02:02:41Z",
+          "release_created_at": "2026-07-26T01:58:44Z",
+          "release_started_at": "2026-07-26T02:02:43Z",
+          "release_completed_at": "2026-07-26T02:06:45Z",
+          "ci_conclusion": "success",
+          "release_conclusion": "success",
+          "interference": "serialization",
+          "gap_after_ci_seconds": 2,
+          "valid": true
+        },
+        {
+          "trial_id": "CE11-M2",
+          "order": "release_then_ci",
+          "release_run_id": "30185367263",
+          "ci_run_id": "30185371978",
+          "release_created_at": "2026-07-26T02:57:12Z",
+          "release_started_at": "2026-07-26T02:57:17Z",
+          "ci_created_at": "2026-07-26T02:57:23Z",
+          "ci_started_at": "2026-07-26T02:57:44Z",
+          "release_conclusion": "cancelled",
+          "ci_conclusion": "success",
+          "interference": "cancellation",
+          "dispatch_gap_seconds": 11,
+          "valid": true,
+          "head_sha": "91245dabcb04c8f07cb49a6f41ebde4ca38ccd42"
+        },
+        {
+          "trial_id": "CE11-M3",
+          "order": "ci_then_release",
+          "ci_run_id": "30185943811",
+          "release_run_id": "30185948827",
+          "ci_started_at": "2026-07-26T03:18:04Z",
+          "ci_completed_at": "2026-07-26T03:22:08Z",
+          "release_started_at": "2026-07-26T03:22:11Z",
+          "release_completed_at": "2026-07-26T03:26:16Z",
+          "ci_conclusion": "success",
+          "release_conclusion": "success",
+          "interference": "serialization",
+          "gap_after_ci_seconds": 3,
+          "valid": true,
+          "head_sha_short": "91245da"
+        },
+        {
+          "trial_id": "CE11-M4",
+          "order": "release_then_ci",
+          "release_run_id": "30186277499",
+          "ci_run_id": "30186283223",
+          "release_started_at": "2026-07-26T03:30:34Z",
+          "release_completed_at": "2026-07-26T03:30:58Z",
+          "ci_created_at": "2026-07-26T03:30:43Z",
+          "ci_started_at": "2026-07-26T03:30:43Z",
+          "release_conclusion": "cancelled",
+          "ci_conclusion": "success",
+          "interference": "cancellation",
+          "ci_dispatched_after_release_start_seconds": 9,
+          "valid": true,
+          "head_sha": "91245dabcb04c8f07cb49a6f41ebde4ca38ccd42"
+        },
+        {
+          "trial_id": "CE11-M5",
+          "order": "ci_then_release",
+          "ci_run_id": "30186515937",
+          "release_run_id": "30186520401",
+          "ci_started_at": "2026-07-26T03:39:37Z",
+          "ci_completed_at": "2026-07-26T03:43:40Z",
+          "release_started_at": "2026-07-26T03:43:43Z",
+          "release_completed_at": "2026-07-26T03:47:47Z",
+          "ci_conclusion": "success",
+          "release_conclusion": "success",
+          "interference": "serialization",
+          "gap_after_ci_seconds": 3,
+          "valid": true,
+          "head_sha_short": "91245da"
+        },
+        {
+          "trial_id": "CE11-M6",
+          "order": "release_then_ci",
+          "release_run_id": "30186861639",
+          "ci_run_id": "30186869137",
+          "release_started_at": "2026-07-26T03:52:40Z",
+          "release_completed_at": "2026-07-26T03:53:09Z",
+          "ci_started_at": "2026-07-26T03:53:11Z",
+          "ci_completed_at": "2026-07-26T03:57:13Z",
+          "release_conclusion": "cancelled",
+          "ci_conclusion": "success",
+          "interference": "cancellation",
+          "gap_after_release_cancellation_seconds": 2,
+          "valid": true,
+          "head_sha_short": "91245da"
+        }
+      ],
+      "claim": "Shared concurrency group caused repeatable serialization or cancellation depending on trigger order."
+    }
+  ],
+  "claim_boundary": "Controlled executions confirm benchmark oracles only; static-analyzer detection rates remain unmeasured."
+}

@@ -1,0 +1,46 @@
+case_id: CE08
+mutant_id: B003_RL02_001
+status: confirmed
+baseline:
+  branch: ce08-baseline
+  run_id: '30180196081'
+  run_url: https://github.com/Tanya-Sriv/github-actions-semantic-benchmark-pilot/actions/runs/30180196081
+  commit_sha_short: '2271994'
+  commit_sha_full: NOT_PROVIDED
+  workflow_sha256: bf60b7dcae9061f11d94651c4861b3d00539b32e8c6a860e2be7a6efebc32f26
+  controlled_test_failure_observed: true
+  failure_message: 'AssertionError: Controlled benchmark failure'
+  run_tests_outcome: failure
+  run_tests_conclusion: failure
+  upload_failure_logs: success
+  failure_logs_artifact_created: true
+  job_conclusion: failure
+  workflow_conclusion: failure
+mutant:
+  branch: ce08-mutant
+  run_id: '30180205558'
+  run_url: https://github.com/Tanya-Sriv/github-actions-semantic-benchmark-pilot/actions/runs/30180205558
+  commit_sha_short: 7edfcee
+  commit_sha_full: NOT_PROVIDED
+  workflow_sha256: NOT_PROVIDED
+  controlled_test_failure_observed: true
+  failure_message: 'AssertionError: Controlled benchmark failure'
+  run_tests_outcome: failure
+  run_tests_conclusion: success
+  upload_failure_logs: skipped
+  failure_logs_artifact_created: false
+  job_conclusion: success
+  workflow_conclusion: success
+observation: The same controlled pytest assertion failed in both runs. In the baseline, the test step had outcome
+  failure and conclusion failure, the failure-log upload ran, the failure artifact was created, and the workflow
+  failed. In the mutant, the test step retained outcome failure but had conclusion success, the failure()-guarded
+  upload was skipped, no failure artifact was created, and the workflow passed.
+interpretation: continue-on-error preserved the underlying failed outcome but changed the effective step conclusion
+  to success, suppressing the required failure-handling path.
+limitations:
+- The supplied commit identifiers are short SHAs; full 40-character commit SHAs remain pending.
+- The supplied baseline SHA-256 is recorded as a workflow/file hash, not as a Git commit SHA.
+- The public run pages could not be independently opened from this environment, so the run metadata is recorded
+  from the user's direct report.
+reviewer: Tanya Srivastava
+review_date: '2026-07-25'

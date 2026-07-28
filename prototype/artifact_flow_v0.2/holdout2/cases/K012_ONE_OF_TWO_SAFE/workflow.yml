@@ -1,0 +1,22 @@
+name: k012
+on: workflow_dispatch
+jobs:
+  a:
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo a > a.txt
+      - uses: actions/upload-artifact@v4
+        with: {name: package, path: a.txt}
+  b:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo b > b.txt
+      - uses: actions/upload-artifact@v4
+        with: {name: package, path: b.txt}
+  verify:
+    needs: [a, b]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {name: package}

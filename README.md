@@ -27,7 +27,7 @@ The repository currently includes:
 - comparison and validation scripts;
 - execution and adjudication documentation.
 
-Canonical prototype, result, and runtime-evidence materials will be included only after they are verified against the manuscript.
+The repository includes the canonical Artifact-Flow Analysis prototype, consolidated result artifacts, and controlled runtime-validation evidence corresponding to the study.
 
 ## Research Scope
 
@@ -60,3 +60,6 @@ scripts/                    Validation and comparison utilities
 templates/                  Evidence and adjudication templates
 docs/                       Setup, execution, and troubleshooting guidance
 fixture/                    Active controlled-execution fixture location
+prototype/                  Artifact-Flow Analysis v0.2, tests, and holdouts
+results/                    Canonical result tables and validation summaries
+runtime_evidence/           CE01, CE08, and CE11 execution evidence

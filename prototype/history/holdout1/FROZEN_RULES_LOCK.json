@@ -1,0 +1,11 @@
+{
+  "prototype_version": "0.1-frozen",
+  "source_analyzer_sha256": "639b1178480f559d626e73ccf261bd7012b57b560602f2a25cac9a9cea241e3b",
+  "rules": [
+    "AF001",
+    "AF002"
+  ],
+  "rule_change_after_holdout_creation": false,
+  "holdout_cases": 14,
+  "created_purpose": "Unseen holdout evaluation after rule development was complete."
+}

@@ -1,0 +1,15 @@
+{
+  "prototype_version": "0.2",
+  "status": "consumed-holdout regression only",
+  "cases": 14,
+  "confusion_matrix": {
+    "tp": 6,
+    "fp": 0,
+    "tn": 8,
+    "fn": 0
+  },
+  "precision": 1.0,
+  "recall": 1.0,
+  "specificity": 1.0,
+  "all_oracles_matched": true
+}

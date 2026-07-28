@@ -1,0 +1,22 @@
+{
+  "prototype_version": "0.2-frozen",
+  "analyzer_sha256": "12d22382838e10ae5616fb2b5946b284ed1966145e818d81573cfee9d642eedf",
+  "holdout_cases": 16,
+  "positive_cases": 7,
+  "negative_cases": 9,
+  "case_level_confusion_matrix": {
+    "tp": 7,
+    "fp": 0,
+    "tn": 9,
+    "fn": 0
+  },
+  "case_level_precision": 1.0,
+  "case_level_recall": 1.0,
+  "case_level_specificity": 1.0,
+  "exact_rule_oracle_matches": 16,
+  "exact_rule_oracle_match_rate": 1.0,
+  "all_oracles_matched": true,
+  "false_positive_cases": [],
+  "false_negative_cases": [],
+  "claim_boundary": "Frozen v0.2 result on the designed second holdout. It supports behavior on these cases, not population-level accuracy."
+}

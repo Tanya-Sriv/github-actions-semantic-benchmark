@@ -1,0 +1,14 @@
+name: k004
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo x > x.txt
+      - uses: actions/upload-artifact@v4
+        with: {name: package, path: x.txt}
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {name: package}

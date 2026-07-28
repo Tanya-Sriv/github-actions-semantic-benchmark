@@ -1,0 +1,8 @@
+{
+  "mutants": 18,
+  "existing_tool_union_detections": 1,
+  "pinned_union_detections": 1,
+  "runtime_confirmed_mutants": 3,
+  "artifact_flow_detected_mutants": 4,
+  "status": "PASS"
+}

@@ -1,0 +1,147 @@
+﻿[
+  {
+    "case_id": "K001_CONSUMER_TYPO",
+    "rule_id": "AF001",
+    "message": "Job 'verify' consumes artifact 'packages', but this workflow contains no producer with the same explicit artifact name.",
+    "workflow": "prototype/artifact_flow_v0.2/holdout2/cases/K001_CONSUMER_TYPO/workflow.yml",
+    "consumer_job": "verify",
+    "consumer_step_index": 0,
+    "artifact_name": "packages",
+    "producer_jobs": [],
+    "confidence": "high",
+    "evidence": {
+      "reason": "no_exact_name_match"
+    }
+  },
+  {
+    "case_id": "K002_PRODUCER_DISABLED",
+    "rule_id": "AF001",
+    "message": "Job 'verify' consumes artifact 'package', but every matching producer in its dependency ancestry is conditionally non-guaranteed.",
+    "workflow": "prototype/artifact_flow_v0.2/holdout2/cases/K002_PRODUCER_DISABLED/workflow.yml",
+    "consumer_job": "verify",
+    "consumer_step_index": 0,
+    "artifact_name": "package",
+    "producer_jobs": [
+      "build"
+    ],
+    "confidence": "high",
+    "evidence": {
+      "reason": "all_matching_producers_conditionally_non_guaranteed",
+      "producers": [
+        {
+          "job": "build",
+          "step_index": 1,
+          "condition": "false",
+          "reason": "producer condition is false"
+        }
+      ]
+    }
+  },
+  {
+    "case_id": "K003_BRANCH_CONTRADICTION",
+    "rule_id": "AF001",
+    "message": "Job 'verify' consumes artifact 'package', but every matching producer in its dependency ancestry is conditionally non-guaranteed.",
+    "workflow": "prototype/artifact_flow_v0.2/holdout2/cases/K003_BRANCH_CONTRADICTION/workflow.yml",
+    "consumer_job": "verify",
+    "consumer_step_index": 0,
+    "artifact_name": "package",
+    "producer_jobs": [
+      "build"
+    ],
+    "confidence": "high",
+    "evidence": {
+      "reason": "all_matching_producers_conditionally_non_guaranteed",
+      "producers": [
+        {
+          "job": "build",
+          "step_index": 1,
+          "condition": "github.ref == 'refs/heads/main'",
+          "reason": "producer requires a branch ref but workflow has no push trigger"
+        }
+      ]
+    }
+  },
+  {
+    "case_id": "K004_PARALLEL_JOBS",
+    "rule_id": "AF002",
+    "message": "Job 'verify' consumes artifact 'package', but no matching producer is guaranteed to execute earlier through either same-job step order or the consumer job's declared needs ancestry.",
+    "workflow": "prototype/artifact_flow_v0.2/holdout2/cases/K004_PARALLEL_JOBS/workflow.yml",
+    "consumer_job": "verify",
+    "consumer_step_index": 0,
+    "artifact_name": "package",
+    "producer_jobs": [
+      "build"
+    ],
+    "confidence": "high",
+    "evidence": {
+      "reason": "missing_declared_dependency_or_prior_same_job_producer",
+      "consumer_needs_ancestors": [],
+      "same_job_late_producer_steps": []
+    }
+  },
+  {
+    "case_id": "K005_SAME_JOB_REVERSED",
+    "rule_id": "AF002",
+    "message": "Job 'test' consumes artifact 'package', but no matching producer is guaranteed to execute earlier through either same-job step order or the consumer job's declared needs ancestry.",
+    "workflow": "prototype/artifact_flow_v0.2/holdout2/cases/K005_SAME_JOB_REVERSED/workflow.yml",
+    "consumer_job": "test",
+    "consumer_step_index": 0,
+    "artifact_name": "package",
+    "producer_jobs": [
+      "test"
+    ],
+    "confidence": "high",
+    "evidence": {
+      "reason": "missing_declared_dependency_or_prior_same_job_producer",
+      "consumer_needs_ancestors": [],
+      "same_job_late_producer_steps": [
+        2
+      ]
+    }
+  },
+  {
+    "case_id": "K006_TRANSITIVE_WRONG_BRANCH",
+    "rule_id": "AF002",
+    "message": "Job 'verify' consumes artifact 'package', but no matching producer is guaranteed to execute earlier through either same-job step order or the consumer job's declared needs ancestry.",
+    "workflow": "prototype/artifact_flow_v0.2/holdout2/cases/K006_TRANSITIVE_WRONG_BRANCH/workflow.yml",
+    "consumer_job": "verify",
+    "consumer_step_index": 0,
+    "artifact_name": "package",
+    "producer_jobs": [
+      "build"
+    ],
+    "confidence": "high",
+    "evidence": {
+      "reason": "missing_declared_dependency_or_prior_same_job_producer",
+      "consumer_needs_ancestors": [
+        "gate",
+        "lint"
+      ],
+      "same_job_late_producer_steps": []
+    }
+  },
+  {
+    "case_id": "K007_DIFFERENT_EVENT_CONDITIONS",
+    "rule_id": "AF001",
+    "message": "Job 'verify' consumes artifact 'package', but every matching producer in its dependency ancestry is conditionally non-guaranteed.",
+    "workflow": "prototype/artifact_flow_v0.2/holdout2/cases/K007_DIFFERENT_EVENT_CONDITIONS/workflow.yml",
+    "consumer_job": "verify",
+    "consumer_step_index": 0,
+    "artifact_name": "package",
+    "producer_jobs": [
+      "build"
+    ],
+    "confidence": "high",
+    "evidence": {
+      "reason": "all_matching_producers_conditionally_non_guaranteed",
+      "producers": [
+        {
+          "job": "build",
+          "step_index": 1,
+          "condition": "github.event_name == 'push'",
+          "reason": "producer has an additional condition not shared by the consumer"
+        }
+      ]
+    }
+  }
+]

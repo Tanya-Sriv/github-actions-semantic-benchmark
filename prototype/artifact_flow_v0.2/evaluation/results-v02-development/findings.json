@@ -1,0 +1,80 @@
+﻿[
+  {
+    "case_type": "mutant",
+    "case_id": "B001_AR01_001",
+    "rule_id": "AF001",
+    "message": "Job 'verify' consumes artifact 'package-${{ github.sha }}', but this workflow contains no producer with the same explicit artifact name.",
+    "workflow": "benchmark/mutants/B001/AR01/B001_AR01_001/workflows/ci.yml",
+    "consumer_job": "verify",
+    "consumer_step_index": 0,
+    "artifact_name": "package-${{ github.sha }}",
+    "producer_jobs": [],
+    "confidence": "high",
+    "evidence": {
+      "reason": "no_exact_name_match"
+    },
+    "workflow_file": "ci.yml"
+  },
+  {
+    "case_type": "mutant",
+    "case_id": "B001_AR02_001",
+    "rule_id": "AF001",
+    "message": "Job 'verify' consumes artifact 'package-consumer-${{ github.sha }}', but this workflow contains no producer with the same explicit artifact name.",
+    "workflow": "benchmark/mutants/B001/AR02/B001_AR02_001/workflows/ci.yml",
+    "consumer_job": "verify",
+    "consumer_step_index": 0,
+    "artifact_name": "package-consumer-${{ github.sha }}",
+    "producer_jobs": [],
+    "confidence": "high",
+    "evidence": {
+      "reason": "no_exact_name_match"
+    },
+    "workflow_file": "ci.yml"
+  },
+  {
+    "case_type": "mutant",
+    "case_id": "B001_AR03_001",
+    "rule_id": "AF001",
+    "message": "Job 'verify' consumes artifact 'package-${{ github.sha }}', but every matching producer in its dependency ancestry is conditionally non-guaranteed.",
+    "workflow": "benchmark/mutants/B001/AR03/B001_AR03_001/workflows/ci.yml",
+    "consumer_job": "verify",
+    "consumer_step_index": 0,
+    "artifact_name": "package-${{ github.sha }}",
+    "producer_jobs": [
+      "build"
+    ],
+    "confidence": "high",
+    "evidence": {
+      "reason": "all_matching_producers_conditionally_non_guaranteed",
+      "producers": [
+        {
+          "job": "build",
+          "step_index": 3,
+          "condition": "github.ref == 'refs/heads/release'",
+          "reason": "producer requires a branch ref but workflow has no push trigger"
+        }
+      ]
+    },
+    "workflow_file": "ci.yml"
+  },
+  {
+    "case_type": "mutant",
+    "case_id": "B001_CF01_001",
+    "rule_id": "AF002",
+    "message": "Job 'verify' consumes artifact 'package-${{ github.sha }}', but no matching producer is guaranteed to execute earlier through either same-job step order or the consumer job's declared needs ancestry.",
+    "workflow": "benchmark/mutants/B001/CF01/B001_CF01_001/workflows/ci.yml",
+    "consumer_job": "verify",
+    "consumer_step_index": 0,
+    "artifact_name": "package-${{ github.sha }}",
+    "producer_jobs": [
+      "build"
+    ],
+    "confidence": "high",
+    "evidence": {
+      "reason": "missing_declared_dependency_or_prior_same_job_producer",
+      "consumer_needs_ancestors": [],
+      "same_job_late_producer_steps": []
+    },
+    "workflow_file": "ci.yml"
+  }
+]

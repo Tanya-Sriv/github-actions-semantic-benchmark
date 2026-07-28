@@ -1,0 +1,17 @@
+case_id,label,expected_rules,description,workflow_file,observed_rules,finding_count,oracle_match
+K001_CONSUMER_TYPO,positive,AF001,Consumer artifact name differs by one character from producer.,cases/K001_CONSUMER_TYPO/workflow.yml,AF001,1,True
+K002_PRODUCER_DISABLED,positive,AF001,Only matching producer has false condition.,cases/K002_PRODUCER_DISABLED/workflow.yml,AF001,1,True
+K003_BRANCH_CONTRADICTION,positive,AF001,Producer requires branch push but workflow has pull_request only.,cases/K003_BRANCH_CONTRADICTION/workflow.yml,AF001,1,True
+K004_PARALLEL_JOBS,positive,AF002,Consumer and producer jobs can run in parallel because needs is absent.,cases/K004_PARALLEL_JOBS/workflow.yml,AF002,1,True
+K005_SAME_JOB_REVERSED,positive,AF002,Same-job download occurs before the upload step.,cases/K005_SAME_JOB_REVERSED/workflow.yml,AF002,1,True
+K006_TRANSITIVE_WRONG_BRANCH,positive,AF002,"Consumer depends on a sibling branch, not the artifact producer ancestry.",cases/K006_TRANSITIVE_WRONG_BRANCH/workflow.yml,AF002,1,True
+K007_DIFFERENT_EVENT_CONDITIONS,positive,AF001,Producer and consumer use mutually different event conditions.,cases/K007_DIFFERENT_EVENT_CONDITIONS/workflow.yml,AF001,1,True
+K008_SAME_JOB_SAFE,negative,,Same-job upload precedes download.,cases/K008_SAME_JOB_SAFE/workflow.yml,,0,True
+K009_SHARED_JOB_CONDITION,negative,,Producer and consumer jobs share an identical condition.,cases/K009_SHARED_JOB_CONDITION/workflow.yml,,0,True
+K010_SHARED_STEP_CONDITION,negative,,Upload and download steps share the same explicit condition.,cases/K010_SHARED_STEP_CONDITION/workflow.yml,,0,True
+K011_TRANSITIVE_SAFE,negative,,Producer is in transitive needs ancestry.,cases/K011_TRANSITIVE_SAFE/workflow.yml,,0,True
+K012_ONE_OF_TWO_SAFE,negative,,One of two matching producers is unconditional and in ancestry.,cases/K012_ONE_OF_TWO_SAFE/workflow.yml,,0,True
+K013_EXPRESSION_NAME_SAFE,negative,,Matching expression-valued names are treated consistently.,cases/K013_EXPRESSION_NAME_SAFE/workflow.yml,,0,True
+K014_DOWNLOAD_ALL,negative,,Download-all remains outside explicit-name rules.,cases/K014_DOWNLOAD_ALL/workflow.yml,,0,True
+K015_EXPLICIT_SUCCESS_SAFE,negative,,Explicit default success condition is safe.,cases/K015_EXPLICIT_SUCCESS_SAFE/workflow.yml,,0,True
+K016_PARENTHESES_SHARED,negative,,Superficially parenthesized equivalent conditions are normalized.,cases/K016_PARENTHESES_SHARED/workflow.yml,,0,True

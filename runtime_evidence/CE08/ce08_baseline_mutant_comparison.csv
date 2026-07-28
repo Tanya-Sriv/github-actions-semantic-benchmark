@@ -1,0 +1,3 @@
+variant,branch,run_id,run_url,commit_sha_short,commit_sha_full,workflow_sha256,run_tests_outcome,run_tests_conclusion,upload_failure_logs,failure_logs_artifact_created,job_conclusion,workflow_conclusion
+baseline,ce08-baseline,30180196081,https://github.com/Tanya-Sriv/github-actions-semantic-benchmark-pilot/actions/runs/30180196081,2271994,NOT_PROVIDED,bf60b7dcae9061f11d94651c4861b3d00539b32e8c6a860e2be7a6efebc32f26,failure,failure,success,True,failure,failure
+mutant,ce08-mutant,30180205558,https://github.com/Tanya-Sriv/github-actions-semantic-benchmark-pilot/actions/runs/30180205558,7edfcee,NOT_PROVIDED,NOT_PROVIDED,failure,success,skipped,False,success,success

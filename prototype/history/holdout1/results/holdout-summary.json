@@ -1,0 +1,24 @@
+{
+  "prototype_version": "0.1-frozen",
+  "holdout_cases": 14,
+  "positive_cases": 6,
+  "negative_cases": 8,
+  "case_level_confusion_matrix": {
+    "tp": 6,
+    "fp": 2,
+    "tn": 6,
+    "fn": 0
+  },
+  "case_level_precision": 0.75,
+  "case_level_recall": 1.0,
+  "case_level_specificity": 0.75,
+  "exact_rule_oracle_matches": 12,
+  "exact_rule_oracle_match_rate": 0.8571428571428571,
+  "all_oracles_matched": false,
+  "false_positive_cases": [
+    "H012_SAME_JOB_REUSE",
+    "H013_SHARED_CONDITION"
+  ],
+  "false_negative_cases": [],
+  "claim_boundary": "Rules were frozen before the holdout cases were evaluated. Results apply to this designed holdout set and do not establish population-level accuracy."
+}

@@ -1,0 +1,15 @@
+{
+  "prototype_version": "0.2-frozen",
+  "analyzer_sha256": "12d22382838e10ae5616fb2b5946b284ed1966145e818d81573cfee9d642eedf",
+  "rules": [
+    "AF001",
+    "AF002"
+  ],
+  "refinements": [
+    "same-job upload-before-download ordering",
+    "exactly equivalent producer-consumer conditions"
+  ],
+  "development_regression_complete": true,
+  "holdout1_used_only_for_error-analysis_and_regression": true,
+  "statement": "No analyzer changes are permitted after this lock and before Holdout 2 evaluation."
+}

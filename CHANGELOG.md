@@ -38,17 +38,19 @@ All notable changes to the GitHub Actions Semantic Benchmark are documented in t
 
 \- File-integrity manifest.
 
+\- Artifact-Flow Analysis v0.2 implementation, unit tests, and evaluation scripts.
+
+\- Frozen Holdout 1 development history and Holdout 2 evaluation cases.
+
+\- Canonical mutant-result tables and consolidated result workbook.
+
+\- CE01, CE08, and CE11 controlled runtime-evidence records.
+
 
 
 \### Planned Before Release
 
 
-
-\- Canonical Artifact-Flow Analysis prototype and holdout cases.
-
-\- Canonical normalized analyzer results and summaries.
-
-\- Verified runtime-evidence records.
 
 \- Clean-clone reproduction verification.
 

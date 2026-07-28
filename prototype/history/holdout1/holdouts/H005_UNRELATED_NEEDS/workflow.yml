@@ -1,0 +1,21 @@
+name: H005
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: dist/
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo lint
+  verify:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: package

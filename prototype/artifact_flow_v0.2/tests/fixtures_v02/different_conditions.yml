@@ -1,0 +1,22 @@
+name: different-conditions
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo data > pkg.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pkg
+          path: pkg.txt
+  verify:
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: pkg

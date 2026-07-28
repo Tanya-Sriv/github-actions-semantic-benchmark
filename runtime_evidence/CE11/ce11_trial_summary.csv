@@ -1,0 +1,5 @@
+variant,trial,trigger_order,ci_run_id,release_run_id,ci_conclusion,release_conclusion,cancellation_observed,waiting_or_serialization,interference_observed,result
+baseline,1,ci_then_release,30182788640,30182803651,success,success,False,not_reported,False,no_interference_observed
+baseline,2,release_then_ci,30183164244,30183159436,success,success,False,False,False,no_interference_observed
+mutant,1,ci_then_release,30183768327,30183772751,success,success,False,True,True,serialization_confirmed
+mutant,2,release_then_ci,30185371978,30185367263,success,cancelled,True,False,True,cancellation_confirmed

@@ -1,0 +1,16 @@
+name: k003
+on: pull_request
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo x > x.txt
+      - uses: actions/upload-artifact@v4
+        with: {name: package, path: x.txt}
+  verify:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {name: package}

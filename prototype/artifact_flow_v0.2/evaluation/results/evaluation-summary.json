@@ -1,0 +1,24 @@
+{
+  "prototype_version": "0.2",
+  "corpus": {
+    "baselines": 5,
+    "mutants": 18,
+    "negative_controls": 5,
+    "total_cases": 28
+  },
+  "artifact_flow_positive_mutants": 4,
+  "case_level_confusion_matrix": {
+    "tp": 4,
+    "fp": 0,
+    "tn": 24,
+    "fn": 0
+  },
+  "case_level_precision": 1.0,
+  "case_level_recall": 1.0,
+  "all_oracles_matched": true,
+  "rule_findings": {
+    "AF001": 3,
+    "AF002": 1
+  },
+  "claim_boundary": "In-sample results on known artifact-flow mutants, clean baselines, and semantics-preserving controls; unseen holdout evaluation is required before general detector-accuracy claims."
+}

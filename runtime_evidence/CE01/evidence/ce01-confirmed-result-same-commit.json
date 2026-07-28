@@ -1,0 +1,44 @@
+{
+  "case_id": "CE01",
+  "mutant_id": "B001_AR03_001",
+  "baseline_id": "B001",
+  "status": "runtime_consequence_confirmed_same_commit",
+  "common_source_commit_sha": "a09033845e777332340f52784f6cebbd02adc088",
+  "baseline": {
+    "run_id": "30223029640",
+    "workflow_conclusion": "success",
+    "build_job_conclusion": "success",
+    "producer_upload_conclusion": "success",
+    "verify_job_conclusion": "success",
+    "consumer_download_conclusion": "success",
+    "artifact_present": true
+  },
+  "mutant": {
+    "run_id": "30223035306",
+    "workflow_conclusion": "failure",
+    "build_job_conclusion": "success",
+    "producer_upload_conclusion": "skipped",
+    "verify_job_conclusion": "failure",
+    "consumer_download_conclusion": "failure",
+    "artifact_present": false,
+    "observed_error": "Unable to download artifact(s): Artifact not found for name: ce01-package"
+  },
+  "oracle": {
+    "baseline_expected": {
+      "producer_upload": "success",
+      "consumer_download": "success",
+      "artifact_present": true
+    },
+    "mutant_expected": {
+      "producer_upload": "skipped",
+      "consumer_download": "failure",
+      "artifact_present": false
+    },
+    "confirmed": true
+  },
+  "comparability": {
+    "same_repository_commit": true,
+    "strict_version_parity_satisfied": true
+  },
+  "claim_boundary": "The evidence confirms the expected runtime consequence of a skipped artifact producer and unconditional downstream consumer in this controlled same-commit setup. It does not estimate population-level artifact-flow fault rates."
+}

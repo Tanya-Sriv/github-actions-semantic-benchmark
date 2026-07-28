@@ -1,0 +1,16 @@
+control_id,source_baseline,tool,baseline_finding_count,control_finding_count,normalized_findings_invariant
+NC001_COMMENT_ONLY,B001,actionlint,0,0,True
+NC001_COMMENT_ONLY,B001,zizmor,4,4,True
+NC001_COMMENT_ONLY,B001,poutine,0,0,True
+NC002_SEQUENCE_STYLE,B002,actionlint,0,0,True
+NC002_SEQUENCE_STYLE,B002,zizmor,2,2,True
+NC002_SEQUENCE_STYLE,B002,poutine,0,0,True
+NC003_QUOTE_STYLE,B003,actionlint,0,0,True
+NC003_QUOTE_STYLE,B003,zizmor,3,3,True
+NC003_QUOTE_STYLE,B003,poutine,0,0,True
+NC004_EVENT_KEY_ORDER,B004,actionlint,0,0,True
+NC004_EVENT_KEY_ORDER,B004,zizmor,2,2,True
+NC004_EVENT_KEY_ORDER,B004,poutine,0,0,True
+NC005_EXPLICIT_SUCCESS,B005,actionlint,0,0,True
+NC005_EXPLICIT_SUCCESS,B005,zizmor,2,2,True
+NC005_EXPLICIT_SUCCESS,B005,poutine,0,0,True

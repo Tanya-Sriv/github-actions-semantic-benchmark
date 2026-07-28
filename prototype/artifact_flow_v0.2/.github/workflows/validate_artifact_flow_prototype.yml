@@ -1,0 +1,25 @@
+name: Validate Artifact-Flow Prototype
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r artifact-flow-prototype/requirements.txt
+      - run: python -m pytest artifact-flow-prototype/tests -q
+      - name: Evaluate benchmark corpus
+        run: |
+          python artifact-flow-prototype/evaluation/run_evaluation.py             --baselines benchmark/baselines             --mutants benchmark/mutants             --manifest benchmark/mutant_manifest.csv             --controls benchmark/negative_controls             --output-dir artifact-flow-prototype/evaluation/results
+      - uses: actions/upload-artifact@v6
+        with:
+          name: artifact-flow-prototype-results
+          path: artifact-flow-prototype/evaluation/results/
+          if-no-files-found: error

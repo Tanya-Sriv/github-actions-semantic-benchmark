@@ -1,0 +1,100 @@
+[
+  {
+    "case_id": "H001_NO_MATCHING_PRODUCER",
+    "label": "positive",
+    "expected_rules": "AF001",
+    "description": "Consumer requests an explicit artifact name with no matching producer.",
+    "workflow_file": "holdouts/H001_NO_MATCHING_PRODUCER/workflow.yml"
+  },
+  {
+    "case_id": "H002_FALSE_PRODUCER",
+    "label": "positive",
+    "expected_rules": "AF001",
+    "description": "Matching producer is disabled by an explicit false condition.",
+    "workflow_file": "holdouts/H002_FALSE_PRODUCER/workflow.yml"
+  },
+  {
+    "case_id": "H003_EVENT_CONTRADICTION",
+    "label": "positive",
+    "expected_rules": "AF001",
+    "description": "Producer requires push although workflow can only be manually dispatched.",
+    "workflow_file": "holdouts/H003_EVENT_CONTRADICTION/workflow.yml"
+  },
+  {
+    "case_id": "H004_MISSING_DIRECT_NEEDS",
+    "label": "positive",
+    "expected_rules": "AF002",
+    "description": "Consumer has no declared dependency on the producer job.",
+    "workflow_file": "holdouts/H004_MISSING_DIRECT_NEEDS/workflow.yml"
+  },
+  {
+    "case_id": "H005_UNRELATED_NEEDS",
+    "label": "positive",
+    "expected_rules": "AF002",
+    "description": "Consumer depends on an unrelated job but not on the producer ancestry.",
+    "workflow_file": "holdouts/H005_UNRELATED_NEEDS/workflow.yml"
+  },
+  {
+    "case_id": "H006_ALL_PRODUCERS_CONDITIONAL",
+    "label": "positive",
+    "expected_rules": "AF001",
+    "description": "Two matching producers exist in dependency ancestry, but both are conditionally non-guaranteed.",
+    "workflow_file": "holdouts/H006_ALL_PRODUCERS_CONDITIONAL/workflow.yml"
+  },
+  {
+    "case_id": "H007_DIRECT_SAFE",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Unconditional producer with a direct needs edge.",
+    "workflow_file": "holdouts/H007_DIRECT_SAFE/workflow.yml"
+  },
+  {
+    "case_id": "H008_TRANSITIVE_NEEDS",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Producer is in the consumer transitive needs ancestry.",
+    "workflow_file": "holdouts/H008_TRANSITIVE_NEEDS/workflow.yml"
+  },
+  {
+    "case_id": "H009_ONE_GUARANTEED_PRODUCER",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "One of two matching producer jobs is unconditional and in dependency ancestry.",
+    "workflow_file": "holdouts/H009_ONE_GUARANTEED_PRODUCER/workflow.yml"
+  },
+  {
+    "case_id": "H010_EXPLICIT_SUCCESS",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Producer uses the explicit default success() condition.",
+    "workflow_file": "holdouts/H010_EXPLICIT_SUCCESS/workflow.yml"
+  },
+  {
+    "case_id": "H011_DOWNLOAD_ALL",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Download-all behavior has no explicit artifact name and is intentionally outside AF001 v0.1.",
+    "workflow_file": "holdouts/H011_DOWNLOAD_ALL/workflow.yml"
+  },
+  {
+    "case_id": "H012_SAME_JOB_REUSE",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Upload and later download occur in the same sequential job; no needs edge is required.",
+    "workflow_file": "holdouts/H012_SAME_JOB_REUSE/workflow.yml"
+  },
+  {
+    "case_id": "H013_SHARED_CONDITION",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Producer and consumer are guarded by the same condition, so the consumer cannot run when the producer is skipped.",
+    "workflow_file": "holdouts/H013_SHARED_CONDITION/workflow.yml"
+  },
+  {
+    "case_id": "H014_MATCHING_EXPRESSION_NAME",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Producer and consumer use the same explicit expression-valued artifact name.",
+    "workflow_file": "holdouts/H014_MATCHING_EXPRESSION_NAME/workflow.yml"
+  }
+]

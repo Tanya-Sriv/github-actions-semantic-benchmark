@@ -1,0 +1,17 @@
+name: k007
+on: [push, pull_request]
+jobs:
+  build:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo x > x.txt
+      - uses: actions/upload-artifact@v4
+        with: {name: package, path: x.txt}
+  verify:
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {name: package}

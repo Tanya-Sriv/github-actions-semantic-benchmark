@@ -1,0 +1,14 @@
+name: same-job-late
+on: workflow_dispatch
+jobs:
+  one:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: pkg
+      - run: echo data > pkg.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pkg
+          path: pkg.txt

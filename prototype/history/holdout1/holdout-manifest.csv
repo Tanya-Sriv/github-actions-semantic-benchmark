@@ -1,0 +1,15 @@
+case_id,label,expected_rules,description,workflow_file
+H001_NO_MATCHING_PRODUCER,positive,AF001,Consumer requests an explicit artifact name with no matching producer.,holdouts/H001_NO_MATCHING_PRODUCER/workflow.yml
+H002_FALSE_PRODUCER,positive,AF001,Matching producer is disabled by an explicit false condition.,holdouts/H002_FALSE_PRODUCER/workflow.yml
+H003_EVENT_CONTRADICTION,positive,AF001,Producer requires push although workflow can only be manually dispatched.,holdouts/H003_EVENT_CONTRADICTION/workflow.yml
+H004_MISSING_DIRECT_NEEDS,positive,AF002,Consumer has no declared dependency on the producer job.,holdouts/H004_MISSING_DIRECT_NEEDS/workflow.yml
+H005_UNRELATED_NEEDS,positive,AF002,Consumer depends on an unrelated job but not on the producer ancestry.,holdouts/H005_UNRELATED_NEEDS/workflow.yml
+H006_ALL_PRODUCERS_CONDITIONAL,positive,AF001,"Two matching producers exist in dependency ancestry, but both are conditionally non-guaranteed.",holdouts/H006_ALL_PRODUCERS_CONDITIONAL/workflow.yml
+H007_DIRECT_SAFE,negative,,Unconditional producer with a direct needs edge.,holdouts/H007_DIRECT_SAFE/workflow.yml
+H008_TRANSITIVE_NEEDS,negative,,Producer is in the consumer transitive needs ancestry.,holdouts/H008_TRANSITIVE_NEEDS/workflow.yml
+H009_ONE_GUARANTEED_PRODUCER,negative,,One of two matching producer jobs is unconditional and in dependency ancestry.,holdouts/H009_ONE_GUARANTEED_PRODUCER/workflow.yml
+H010_EXPLICIT_SUCCESS,negative,,Producer uses the explicit default success() condition.,holdouts/H010_EXPLICIT_SUCCESS/workflow.yml
+H011_DOWNLOAD_ALL,negative,,Download-all behavior has no explicit artifact name and is intentionally outside AF001 v0.1.,holdouts/H011_DOWNLOAD_ALL/workflow.yml
+H012_SAME_JOB_REUSE,negative,,Upload and later download occur in the same sequential job; no needs edge is required.,holdouts/H012_SAME_JOB_REUSE/workflow.yml
+H013_SHARED_CONDITION,negative,,"Producer and consumer are guarded by the same condition, so the consumer cannot run when the producer is skipped.",holdouts/H013_SHARED_CONDITION/workflow.yml
+H014_MATCHING_EXPRESSION_NAME,negative,,Producer and consumer use the same explicit expression-valued artifact name.,holdouts/H014_MATCHING_EXPRESSION_NAME/workflow.yml

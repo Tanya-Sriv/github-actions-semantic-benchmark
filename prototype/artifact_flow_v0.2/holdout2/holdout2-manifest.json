@@ -1,0 +1,114 @@
+[
+  {
+    "case_id": "K001_CONSUMER_TYPO",
+    "label": "positive",
+    "expected_rules": "AF001",
+    "description": "Consumer artifact name differs by one character from producer.",
+    "workflow_file": "cases/K001_CONSUMER_TYPO/workflow.yml"
+  },
+  {
+    "case_id": "K002_PRODUCER_DISABLED",
+    "label": "positive",
+    "expected_rules": "AF001",
+    "description": "Only matching producer has false condition.",
+    "workflow_file": "cases/K002_PRODUCER_DISABLED/workflow.yml"
+  },
+  {
+    "case_id": "K003_BRANCH_CONTRADICTION",
+    "label": "positive",
+    "expected_rules": "AF001",
+    "description": "Producer requires branch push but workflow has pull_request only.",
+    "workflow_file": "cases/K003_BRANCH_CONTRADICTION/workflow.yml"
+  },
+  {
+    "case_id": "K004_PARALLEL_JOBS",
+    "label": "positive",
+    "expected_rules": "AF002",
+    "description": "Consumer and producer jobs can run in parallel because needs is absent.",
+    "workflow_file": "cases/K004_PARALLEL_JOBS/workflow.yml"
+  },
+  {
+    "case_id": "K005_SAME_JOB_REVERSED",
+    "label": "positive",
+    "expected_rules": "AF002",
+    "description": "Same-job download occurs before the upload step.",
+    "workflow_file": "cases/K005_SAME_JOB_REVERSED/workflow.yml"
+  },
+  {
+    "case_id": "K006_TRANSITIVE_WRONG_BRANCH",
+    "label": "positive",
+    "expected_rules": "AF002",
+    "description": "Consumer depends on a sibling branch, not the artifact producer ancestry.",
+    "workflow_file": "cases/K006_TRANSITIVE_WRONG_BRANCH/workflow.yml"
+  },
+  {
+    "case_id": "K007_DIFFERENT_EVENT_CONDITIONS",
+    "label": "positive",
+    "expected_rules": "AF001",
+    "description": "Producer and consumer use mutually different event conditions.",
+    "workflow_file": "cases/K007_DIFFERENT_EVENT_CONDITIONS/workflow.yml"
+  },
+  {
+    "case_id": "K008_SAME_JOB_SAFE",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Same-job upload precedes download.",
+    "workflow_file": "cases/K008_SAME_JOB_SAFE/workflow.yml"
+  },
+  {
+    "case_id": "K009_SHARED_JOB_CONDITION",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Producer and consumer jobs share an identical condition.",
+    "workflow_file": "cases/K009_SHARED_JOB_CONDITION/workflow.yml"
+  },
+  {
+    "case_id": "K010_SHARED_STEP_CONDITION",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Upload and download steps share the same explicit condition.",
+    "workflow_file": "cases/K010_SHARED_STEP_CONDITION/workflow.yml"
+  },
+  {
+    "case_id": "K011_TRANSITIVE_SAFE",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Producer is in transitive needs ancestry.",
+    "workflow_file": "cases/K011_TRANSITIVE_SAFE/workflow.yml"
+  },
+  {
+    "case_id": "K012_ONE_OF_TWO_SAFE",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "One of two matching producers is unconditional and in ancestry.",
+    "workflow_file": "cases/K012_ONE_OF_TWO_SAFE/workflow.yml"
+  },
+  {
+    "case_id": "K013_EXPRESSION_NAME_SAFE",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Matching expression-valued names are treated consistently.",
+    "workflow_file": "cases/K013_EXPRESSION_NAME_SAFE/workflow.yml"
+  },
+  {
+    "case_id": "K014_DOWNLOAD_ALL",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Download-all remains outside explicit-name rules.",
+    "workflow_file": "cases/K014_DOWNLOAD_ALL/workflow.yml"
+  },
+  {
+    "case_id": "K015_EXPLICIT_SUCCESS_SAFE",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Explicit default success condition is safe.",
+    "workflow_file": "cases/K015_EXPLICIT_SUCCESS_SAFE/workflow.yml"
+  },
+  {
+    "case_id": "K016_PARENTHESES_SHARED",
+    "label": "negative",
+    "expected_rules": "",
+    "description": "Superficially parenthesized equivalent conditions are normalized.",
+    "workflow_file": "cases/K016_PARENTHESES_SHARED/workflow.yml"
+  }
+]

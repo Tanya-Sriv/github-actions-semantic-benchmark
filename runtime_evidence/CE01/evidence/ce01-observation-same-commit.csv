@@ -1,0 +1,3 @@
+case_id,variant,common_source_commit_sha,run_id,workflow_conclusion,build_job_conclusion,producer_upload_conclusion,verify_job_conclusion,consumer_download_conclusion,ce01_package_present,notes
+CE01,baseline,a09033845e777332340f52784f6cebbd02adc088,30223029640,success,success,success,success,success,yes,Baseline completed normally from the common commit.
+CE01,mutant,a09033845e777332340f52784f6cebbd02adc088,30223035306,failure,success,skipped,failure,failure,no,Download failed because ce01-package was absent.

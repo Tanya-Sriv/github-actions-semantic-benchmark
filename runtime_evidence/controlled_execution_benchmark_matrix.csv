@@ -1,0 +1,3 @@
+case_id,mutant_id,status,valid_trials,result
+CE08,B003_RL02_001,confirmed,1,failure masking and artifact suppression confirmed
+CE11,B005_CC02_001,confirmed,6,3/3 serialization; 3/3 cancellation

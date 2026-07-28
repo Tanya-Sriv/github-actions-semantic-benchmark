@@ -1,0 +1,85 @@
+{
+  "case_id": "CE11",
+  "mutant_id": "B005_CC02_001",
+  "status": "confirmed",
+  "baseline_trials": [
+    {
+      "trial": 1,
+      "trigger_order": "ci_then_release",
+      "ci_run_id": "30182788640",
+      "release_run_id": "30182803651",
+      "ci_commit_sha_short": "f855319",
+      "release_commit_sha_short": "f855319",
+      "ci_conclusion": "success",
+      "release_conclusion": "success",
+      "cancellation_observed": false,
+      "waiting_or_serialization": "not_reported",
+      "interference_observed": false
+    },
+    {
+      "trial": 2,
+      "trigger_order": "release_then_ci",
+      "ci_run_id": "30183164244",
+      "release_run_id": "30183159436",
+      "release_record_start_time": "2026-07-26T01:36:16Z",
+      "ci_record_start_time": "2026-07-26T01:36:27Z",
+      "start_time_difference_seconds": 11,
+      "ci_conclusion": "success",
+      "release_conclusion": "success",
+      "cancellation_observed": false,
+      "waiting_or_serialization": false,
+      "interference_observed": false,
+      "overlap_confirmed": true
+    }
+  ],
+  "mutant_trials": [
+    {
+      "trial": 1,
+      "trigger_order": "ci_then_release",
+      "ci_run_id": "30183768327",
+      "ci_job_started_at": "2026-07-26T01:58:37Z",
+      "ci_job_completed_at": "2026-07-26T02:02:41Z",
+      "ci_conclusion": "success",
+      "release_run_id": "30183772751",
+      "release_run_created_at": "2026-07-26T01:58:44Z",
+      "release_job_started_at": "2026-07-26T02:02:43Z",
+      "release_job_completed_at": "2026-07-26T02:06:45Z",
+      "release_conclusion": "success",
+      "serialization_delay_seconds": 239,
+      "gap_after_ci_completion_seconds": 2,
+      "cancellation_observed": false,
+      "waiting_or_serialization": true,
+      "interference_observed": true,
+      "result": "serialization_confirmed"
+    },
+    {
+      "trial": 2,
+      "trigger_order": "release_then_ci",
+      "release_run_id": "30185367263",
+      "release_created_at": "2026-07-26T02:57:12Z",
+      "release_run_started_at": "2026-07-26T02:57:12Z",
+      "release_conclusion": "cancelled",
+      "release_head_sha": "91245dabcb04c8f07cb49a6f41ebde4ca38ccd42",
+      "ci_run_id": "30185371978",
+      "ci_created_at": "2026-07-26T02:57:23Z",
+      "ci_run_started_at": "2026-07-26T02:57:23Z",
+      "ci_conclusion": "success",
+      "ci_head_sha": "91245dabcb04c8f07cb49a6f41ebde4ca38ccd42",
+      "dispatch_difference_seconds": 11,
+      "cancellation_observed": true,
+      "cancelled_run": "release",
+      "waiting_or_serialization": false,
+      "interference_observed": true,
+      "result": "cancellation_confirmed"
+    }
+  ],
+  "observation": "The baseline workflows used distinct concurrency groups and completed without cancellation or observed interference. In the mutant, the shared ci-main group serialized the release behind CI in one trigger order and caused a later CI run to cancel an already-running release in the reverse trigger order.",
+  "interpretation": "Changing the release workflow concurrency group from release-main to ci-main created an objective cross-workflow collision. The collision produced both serialization and cancellation, depending on trigger order and cancel-in-progress behavior.",
+  "limitations": [
+    "Only two valid mutant trials are recorded, one per trigger order.",
+    "Additional repetitions are recommended before reporting frequencies or reliability rates.",
+    "One baseline trial lacks exact job-level timestamps in the current record."
+  ],
+  "reviewer": "Tanya Srivastava",
+  "review_date": "2026-07-25"
+}

@@ -1,0 +1,21 @@
+name: Validate frozen artifact-flow holdout
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r artifact-flow-holdout-evaluation/frozen_prototype/requirements.txt
+      - run: python artifact-flow-holdout-evaluation/run_holdout_evaluation.py
+      - uses: actions/upload-artifact@v6
+        with:
+          name: artifact-flow-holdout-results
+          path: artifact-flow-holdout-evaluation/results/
+          if-no-files-found: error

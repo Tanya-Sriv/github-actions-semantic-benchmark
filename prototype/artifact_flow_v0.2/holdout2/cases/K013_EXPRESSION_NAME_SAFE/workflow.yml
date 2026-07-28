@@ -1,0 +1,18 @@
+name: k013
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo x > x.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package-${{ github.run_id }}
+          path: x.txt
+  verify:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: package-${{ github.run_id }}
