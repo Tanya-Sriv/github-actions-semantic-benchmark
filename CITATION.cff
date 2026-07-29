@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this benchmark or its artifacts, please cite the archived release and associated paper."
+message: "If you use this software, benchmark, or its artifacts, please cite the archived release and associated paper."
 
 title: "GitHub Actions Semantic Benchmark"
 type: software
@@ -8,11 +8,12 @@ authors:
   - family-names: "Srivastava"
     given-names: "Tanya"
 
-version: "1.0.0"
-doi: 10.5281/zenodo.21658780
-date-released: 2026-07-28
+version: "1.0.1"
+doi: "10.5281/zenodo.21658780"
+date-released: 2026-07-29
 
 repository-code: "https://github.com/Tanya-Sriv/github-actions-semantic-benchmark"
+repository-artifact: "https://github.com/Tanya-Sriv/github-actions-semantic-benchmark/releases/tag/v1.0.1"
 url: "https://github.com/Tanya-Sriv/github-actions-semantic-benchmark"
 
 license: "MIT"
@@ -27,7 +28,7 @@ keywords:
 
 preferred-citation:
   type: article
-  title: "Valid Files, Broken Pipelines: A Mutation-Based Evaluation of Semantic Error Detection in GitHub Actions Workflows"
+  title: "Valid Files, Broken Pipelines: A Mutation-Based Benchmark for Operational-Semantic Error Detection in GitHub Actions Workflows"
   authors:
     - family-names: "Srivastava"
       given-names: "Tanya"

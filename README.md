@@ -1,27 +1,23 @@
 # GitHub Actions Semantic Benchmark
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21658780.svg)](https://doi.org/10.5281/zenodo.21658780)
 
-## Citation
+This repository contains the canonical `v1.0.1` research artifact associated with the study:
 
-Archived release: https://doi.org/10.5281/zenodo.21658780
-
-Please cite this software using the metadata in `CITATION.cff`.
-
-This repository contains the research artifact for:
-
-> **Valid Files, Broken Pipelines: A Mutation-Based Evaluation of Semantic Error Detection in GitHub Actions Workflows**
+> **Valid Files, Broken Pipelines: A Mutation-Based Benchmark for Operational-Semantic Error Detection in GitHub Actions Workflows**
 
 The benchmark evaluates whether GitHub Actions analysis tools detect operational-semantic faults that remain syntactically valid and schema-valid while violating intended relationships across steps, jobs, triggers, artifacts, failure states, or workflows.
 
-## Repository Status
+## Release and Archival Record
 
-This repository is being prepared for the initial public research-artifact release, `v1.0.0`.
+- **Current release:** [`v1.0.1`](https://github.com/Tanya-Sriv/github-actions-semantic-benchmark/releases/tag/v1.0.1)
+- **Source repository:** [Tanya-Sriv/github-actions-semantic-benchmark](https://github.com/Tanya-Sriv/github-actions-semantic-benchmark)
+- **Zenodo DOI:** [10.5281/zenodo.21658780](https://doi.org/10.5281/zenodo.21658780)
+- **License:** MIT
 
-The release corresponding to the paper will be archived through Zenodo and assigned a version-specific DOI.
+The `v1.0.1` patch release aligns the repository documentation and citation metadata with the finalized manuscript title. The benchmark workflows, semantic mutants, negative controls, analysis outputs, controlled runtime evidence, prototype implementation, evaluation results, and scientific conclusions are unchanged from `v1.0.0`.
 
 ## Benchmark Contents
 
-The repository currently includes:
+The repository includes:
 
 - five canonical synthetic workflow baselines;
 - eighteen schema-valid semantic mutants;
@@ -30,11 +26,25 @@ The repository currently includes:
 - automated clean-baseline and mutant scanner workflows;
 - pinned-action sensitivity analysis;
 - semantic-equivalence validation for negative controls;
-- controlled-execution cases for CE08 and CE11;
+- controlled runtime-validation evidence for CE01, CE08, and CE11;
 - comparison and validation scripts;
-- execution and adjudication documentation.
+- execution and adjudication documentation;
+- the canonical Artifact-Flow Analysis prototype, version 0.2;
+- development and holdout evaluation artifacts; and
+- consolidated result tables and release-validation summaries.
 
-The repository includes the canonical Artifact-Flow Analysis prototype, consolidated result artifacts, and controlled runtime-validation evidence corresponding to the study.
+## Release Validation Summary
+
+The released artifacts report:
+
+- **18** semantic mutants;
+- **1 of 18** mutants detected by the union of the evaluated existing tools;
+- **1 of 18** mutants detected by the pinned-tool union;
+- **3** mutants supported by controlled runtime evidence;
+- **4** known artifact-flow-positive mutants detected by Artifact-Flow Analysis in the benchmark corpus; and
+- exact oracle agreement for all **16** workflows in the designed second holdout for the frozen Artifact-Flow Analysis v0.2.
+
+The Artifact-Flow Analysis results are specific to the released benchmark and designed holdout. They should not be interpreted as population-level detector-accuracy estimates.
 
 ## Research Scope
 
@@ -47,7 +57,7 @@ Representative fault categories include:
 - failure-handling changes;
 - conditional-execution faults;
 - cross-job and cross-workflow dependencies;
-- concurrency-group interference;
+- concurrency-group interference; and
 - operational changes that preserve local validity.
 
 The benchmark is intentionally bounded. It does not claim to represent every GitHub Actions construct, every workflow failure mode, or the prevalence of these faults in public repositories.
@@ -70,3 +80,34 @@ fixture/                    Active controlled-execution fixture location
 prototype/                  Artifact-Flow Analysis v0.2, tests, and holdouts
 results/                    Canonical result tables and validation summaries
 runtime_evidence/           CE01, CE08, and CE11 execution evidence
+```
+
+## Reproducibility
+
+The repository provides workflows and scripts for:
+
+- running clean-baseline scans;
+- running mutant scans;
+- evaluating pinned-action sensitivity;
+- validating semantics-preserving negative controls;
+- validating the Artifact-Flow Analysis prototype;
+- comparing normalized scanner findings; and
+- checking release artifacts and result consistency.
+
+See the `docs/` directory, workflow documentation under `.github/workflows/`, and the prototype-specific instructions under `prototype/artifact_flow_v0.2/`.
+
+## Artifact Boundaries
+
+All workflows and evaluation artifacts were independently created for this study. The repository contains no employer workflow data, proprietary source code, internal logs, confidential metrics, credentials, or private production-system information.
+
+## Citation
+
+To cite the software artifact:
+
+> T. Srivastava, *GitHub Actions Semantic Benchmark*, version 1.0.1, Zenodo, 2026. https://doi.org/10.5281/zenodo.21658780
+
+Citation metadata is also provided in [`CITATION.cff`](CITATION.cff).
+
+## License
+
+This project is released under the [MIT License](LICENSE).

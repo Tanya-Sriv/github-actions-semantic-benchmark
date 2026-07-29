@@ -4,6 +4,22 @@
 
 All notable changes to the GitHub Actions Semantic Benchmark are documented in this file.
 
+## [1.0.1] - 2026-07-29
+
+### Changed
+
+- Finalized the associated manuscript title as:
+  **Valid Files, Broken Pipelines: A Mutation-Based Benchmark for Operational-Semantic Error Detection in GitHub Actions Workflows**
+- Updated the manuscript citation to:
+  Tanya Srivastava, “Valid Files, Broken Pipelines: A Mutation-Based Benchmark for Operational-Semantic Error Detection in GitHub Actions Workflows,” 2026.
+- Updated citation and archival metadata.
+- Updated current-release references to `v1.0.1`.
+
+### Scientific-content status
+
+Benchmark workflows, semantic mutants, negative controls, analysis outputs,
+controlled runtime evidence, Artifact-Flow Analysis implementation,
+evaluation results, and scientific conclusions are unchanged from `v1.0.0`.
 
 
 \## \[1.0.0] - Unreleased
@@ -62,5 +78,5 @@ All notable changes to the GitHub Actions Semantic Benchmark are documented in t
 
 
 
-Tanya Srivastava, “Valid Files, Broken Pipelines: A Mutation-Based Evaluation of Semantic Error Detection in GitHub Actions Workflows,” 2026.
+Tanya Srivastava, “Valid Files, Broken Pipelines: A Mutation-Based Benchmark for Operational-Semantic Error Detection in GitHub Actions Workflows,” 2026.
 
