@@ -1,4 +1,11 @@
 # GitHub Actions Semantic Benchmark
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21658780.svg)](https://doi.org/10.5281/zenodo.21658780)
+
+## Citation
+
+Archived release: https://doi.org/10.5281/zenodo.21658780
+
+Please cite this software using the metadata in `CITATION.cff`.
 
 This repository contains the research artifact for:
 
