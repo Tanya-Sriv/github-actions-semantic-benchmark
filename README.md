@@ -6,6 +6,14 @@ This repository contains the canonical `v1.0.1` research artifact associated wit
 
 The benchmark evaluates whether GitHub Actions analysis tools detect operational-semantic faults that remain syntactically valid and schema-valid while violating intended relationships across steps, jobs, triggers, artifacts, failure states, or workflows.
 
+## Associated Paper
+
+**Valid Files, Broken Pipelines: A Mutation-Based Benchmark for Operational-Semantic Error Detection in GitHub Actions Workflows**
+
+**Author:** Tanya Srivastava  
+**ORCID:** https://orcid.org/0009-0000-5222-2076  
+**Correspondence:** tanya.1108srivastava@gmail.com
+
 ## Release and Archival Record
 
 - **Current release:** [`v1.0.1`](https://github.com/Tanya-Sriv/github-actions-semantic-benchmark/releases/tag/v1.0.1)
