@@ -1,0 +1,18 @@
+Review the following GitHub Actions workflow configuration.
+
+Intended operational behavior:
+{intended_behavior}
+
+Identify any fault where the configuration may remain syntactically valid but violate the stated intended operational relationship. Report only concrete faults supported by the supplied workflow configuration.
+
+For each finding, provide:
+1. affected file and location or construct;
+2. violated operational relationship;
+3. likely operational consequence; and
+4. a brief explanation grounded in the supplied configuration.
+
+Do not provide generic hardening advice, style suggestions, or security recommendations unless they directly explain an operational-semantic fault. If no such fault is present, answer exactly:
+NO OPERATIONAL-SEMANTIC FAULT FOUND
+
+Workflow configuration:
+{workflow_bundle}

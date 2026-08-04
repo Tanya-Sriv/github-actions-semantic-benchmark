@@ -1,0 +1,7 @@
+# Use only when an oracle file lacks a neutral intended-behavior field.
+# Write the intended behavior before model execution without mentioning the mutation or fault.
+BASELINE_B001: "TODO"
+BASELINE_B002: "TODO"
+BASELINE_B003: "TODO"
+BASELINE_B004: "TODO"
+BASELINE_B005: "TODO"

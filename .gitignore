@@ -25,3 +25,33 @@ local_artifact_search/
 **/.pytest_cache/
 *.pyc
 *.pyo
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+
+# LLM baseline local configuration
+evaluation/llm-baseline/providers.yaml
+evaluation/llm-baseline/.env
+
+# Private oracle and intent material
+evaluation/llm-baseline/oracle_key_private.csv
+evaluation/llm-baseline/private/*
+!evaluation/llm-baseline/private/case_intents.example.yaml
+
+# Fresh unpublished contamination-control cases
+evaluation/llm-baseline/unpublished_cases/*
+!evaluation/llm-baseline/unpublished_cases/README.md
+
+# Model execution artifacts before reviewed release
+evaluation/llm-baseline/raw_requests/*
+evaluation/llm-baseline/raw_responses/*
+evaluation/llm-baseline/outputs/*
+evaluation/llm-baseline/logs/*
+
+# Preserve empty-directory placeholders if you add them
+!evaluation/llm-baseline/raw_requests/.gitkeep
+!evaluation/llm-baseline/raw_responses/.gitkeep
+!evaluation/llm-baseline/outputs/.gitkeep
+!evaluation/llm-baseline/logs/.gitkeep

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "benchmark_version": "v1.0.1",
+  "notes": "Paths are relative to the benchmark repository root. prepare_cases.py derives neutral intended-behavior text from frozen oracle files using an explicit allow-list and strips oracle-only fields from model input.",
+  "baselines": [
+    {"case_id":"BASELINE_B001","baseline_id":"B001","set":"public","workflow_globs":["benchmark/baselines/B001/workflows/*.yml","benchmark/baselines/B001/workflows/*.yaml"],"oracle_source_glob":"benchmark/mutants/B001/*/*/oracle.yml"},
+    {"case_id":"BASELINE_B002","baseline_id":"B002","set":"public","workflow_globs":["benchmark/baselines/B002/workflows/*.yml","benchmark/baselines/B002/workflows/*.yaml"],"oracle_source_glob":"benchmark/mutants/B002/*/*/oracle.yml"},
+    {"case_id":"BASELINE_B003","baseline_id":"B003","set":"public","workflow_globs":["benchmark/baselines/B003/workflows/*.yml","benchmark/baselines/B003/workflows/*.yaml"],"oracle_source_glob":"benchmark/mutants/B003/*/*/oracle.yml"},
+    {"case_id":"BASELINE_B004","baseline_id":"B004","set":"public","workflow_globs":["benchmark/baselines/B004/workflows/*.yml","benchmark/baselines/B004/workflows/*.yaml"],"oracle_source_glob":"benchmark/mutants/B004/*/*/oracle.yml"},
+    {"case_id":"BASELINE_B005","baseline_id":"B005","set":"public","workflow_globs":["benchmark/baselines/B005/workflows/*.yml","benchmark/baselines/B005/workflows/*.yaml"],"oracle_source_glob":"benchmark/mutants/B005/*/*/oracle.yml"}
+  ],
+  "mutants": [
+    ["B001_AR01_001","B001","artifact_dataflow"],["B001_AR02_001","B001","artifact_dataflow"],["B001_AR03_001","B001","artifact_dataflow"],["B001_CF01_001","B001","dependency"],
+    ["B002_MX01_001","B002","coverage_intent"],["B002_MX02_001","B002","coverage_intent"],["B002_MX03_001","B002","coverage_intent"],["B002_REF02_001","B002","undefined_context_reference"],["B002_RL01_001","B002","failure_handling"],
+    ["B003_CF02_001","B003","failure_handling"],["B003_CF03_001","B003","failure_handling"],["B003_RL01_001","B003","failure_handling"],["B003_RL02_001","B003","failure_handling"],["B003_RL03_001","B003","failure_handling"],
+    ["B004_TR01_001","B004","trigger_intent"],["B004_TR02_001","B004","trigger_intent"],["B005_CC01_001","B005","concurrency"],["B005_CC02_001","B005","concurrency"]
+  ]
+}

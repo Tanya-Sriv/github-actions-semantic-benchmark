@@ -1,0 +1,32 @@
+experiment:
+  trials_per_case: 3
+  max_output_tokens: 1200
+  timeout_seconds: 120
+  retry_transport_errors: 3
+  user_agent: github-actions-semantic-benchmark-llm-eval/1.0
+
+providers:
+  - provider: openai
+    enabled: false
+    model: "FILL_EXACT_API_MODEL_ID_ON_RUN_DATE"
+    api_key_env: OPENAI_API_KEY
+    endpoint: "https://api.openai.com/v1/responses"
+    temperature: 0
+    extra_request_fields: {}
+
+  - provider: anthropic
+    enabled: false
+    model: "FILL_EXACT_API_MODEL_ID_ON_RUN_DATE"
+    api_key_env: ANTHROPIC_API_KEY
+    endpoint: "https://api.anthropic.com/v1/messages"
+    anthropic_version: "2023-06-01"
+    temperature: 0
+    extra_request_fields: {}
+
+  - provider: google
+    enabled: false
+    model: "FILL_EXACT_API_MODEL_ID_ON_RUN_DATE"
+    api_key_env: GEMINI_API_KEY
+    endpoint_template: "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+    temperature: 0
+    extra_request_fields: {}
