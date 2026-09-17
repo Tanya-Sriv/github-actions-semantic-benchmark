@@ -2,6 +2,10 @@
 
 Authoritative frozen originals are retained in the long-term frozen-records master archive and are not distributed in this public release candidate because Part B contains evaluator-identifying Office metadata.
 
+## Evaluation chronology and independence
+
+Pulkit Srivastava completed the blinded human evaluation before joining the broader research and manuscript-development process. His later participation as a co-author therefore postdates the blinded evaluation and does not alter the chronology under which those judgments were produced.
+
 Public sanitized package SHA-256: `cca852f6c4b72d7cc4b8b93559aae95e6c681e4f677624ff0433fd9e5987bb1e`
 
 | Workbook | Frozen original SHA-256 | Public sanitized SHA-256 |
