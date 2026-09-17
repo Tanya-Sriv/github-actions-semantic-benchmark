@@ -1,0 +1,9 @@
+runtime_id,mutant_id,variant,run_id,conclusion,summary
+CE12,B002_MX01_001,baseline,33899463227,success,4 matrix cells incl. Windows
+CE12,B002_MX01_001,mutant,33899468216,success,2 Ubuntu-only matrix cells
+CE13,B004_TR02_001,baseline,33900274485,success,tests-only PR triggered
+CE13,B004_TR02_001,mutant,,not_created,no run during >=10-minute frozen observation window
+CE14,B003_CF02_001,baseline,33899873255,failure,test failed; summarize ran successfully via always()
+CE14,B003_CF02_001,mutant,33899876229,failure,test failed; summarize skipped
+CE15,B001_AR01_001,baseline,33899610554,success,artifact verify succeeded
+CE15,B001_AR01_001,mutant,33899617923,failure,verify failed at download due artifact-name mismatch

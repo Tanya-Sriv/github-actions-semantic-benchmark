@@ -1,0 +1,32 @@
+name: CE15 artifact identity baseline
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - id: build-package
+        run: |
+          mkdir -p dist
+          echo "artifact payload" > dist/package.txt
+      - id: upload-package
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-${{ github.sha }}
+          path: dist/package.txt
+  verify:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: package-${{ github.sha }}
+          path: received
+      - run: test -f received/package.txt

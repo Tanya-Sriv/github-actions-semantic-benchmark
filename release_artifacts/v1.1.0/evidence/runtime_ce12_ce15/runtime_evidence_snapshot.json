@@ -1,0 +1,63 @@
+{
+  "study": "Valid Files, Broken Pipelines",
+  "extension": "CE12-CE15 controlled runtime validation",
+  "execution_date_utc": "2026-09-04",
+  "repository": "Tanya-Sriv/github-actions-controlled-execution-repository",
+  "freeze_commit": "6a1d7249e7ea7b1d0457f4b945d07a1e7412aba8",
+  "frozen_control_commit": "c8fcd726ed5ccd64cc428fd663d24070766492f0",
+  "results": {
+    "CE12": {
+      "mutant_id": "B002_MX01_001",
+      "oracle": "confirmed",
+      "baseline_run_id": 33899463227,
+      "mutant_run_id": 33899468216
+    },
+    "CE13": {
+      "mutant_id": "B004_TR02_001",
+      "oracle": "confirmed",
+      "pr_number": 1,
+      "pr_head_sha": "12fc75c1047f8a72ad7e459de1013d66ee46f7b3",
+      "baseline_run_id": 33900274485,
+      "mutant_run_id": null,
+      "absence_criterion": ">=10 minutes",
+      "observation_threshold_utc": "2026-09-04T17:33:00Z"
+    },
+    "CE14": {
+      "mutant_id": "B003_CF02_001",
+      "oracle": "confirmed",
+      "baseline_run_id": 33899873255,
+      "mutant_run_id": 33899876229,
+      "baseline": {
+        "test": "failure",
+        "summarize": "success"
+      },
+      "mutant": {
+        "test": "failure",
+        "summarize": "skipped"
+      }
+    },
+    "CE15": {
+      "mutant_id": "B001_AR01_001",
+      "oracle": "confirmed",
+      "baseline_run_id": 33899610554,
+      "mutant_run_id": 33899617923,
+      "baseline_artifact": {
+        "id": 9947101386,
+        "name": "package-c8fcd726ed5ccd64cc428fd663d24070766492f0",
+        "digest": "sha256:b42649003996ffd6d9e75bd15c68e27d4107e76dcf9a7c02233ea34df88c458a"
+      },
+      "mutant_artifact": {
+        "id": 9947104040,
+        "name": "package-mutated-c8fcd726ed5ccd64cc428fd663d24070766492f0",
+        "digest": "sha256:93a5463eb8b5782404a6f171b2f12fab3aeded22cb4b18589a48521360e4e7d2"
+      },
+      "baseline_verify": "success",
+      "mutant_verify": "failure at actions/download-artifact@v4"
+    }
+  },
+  "summary": {
+    "selected_cases": 4,
+    "confirmed_cases": 4,
+    "retries": 0
+  }
+}

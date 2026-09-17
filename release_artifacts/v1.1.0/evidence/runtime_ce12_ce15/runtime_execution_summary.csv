@@ -1,0 +1,9 @@
+case,benchmark_mutant,variant,run_id,conclusion,evidence
+CE12,B002_MX01_001,baseline,33899463227,success,4 matrix jobs succeeded: ubuntu/windows × Python 3.11/3.12
+CE12,B002_MX01_001,mutant,33899468216,success,2 matrix jobs succeeded: ubuntu only × Python 3.11/3.12; Windows coverage removed
+CE13,B004_TR02_001,baseline,33900274485,success,tests-only PR triggered validate job because baseline includes tests/**
+CE13,B004_TR02_001,mutant,NO-RUN EXPECTED,not-triggered,mutant path filter omits tests/**; tests-only PR is excluded by configuration
+CE14,B003_CF02_001,baseline,33899873255,failure,test failed as designed; summarize job still ran and succeeded via always()
+CE14,B003_CF02_001,mutant,33899876229,failure,test failed as designed; summarize job was skipped without always()
+CE15,B001_AR01_001,baseline,33899610554,success,build and verify succeeded; artifact name matched
+CE15,B001_AR01_001,mutant,33899617923,failure,build succeeded; verify failed at download because upload/download artifact names differed
