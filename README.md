@@ -1,6 +1,6 @@
 # GitHub Actions Semantic Benchmark
 
-This repository contains the canonical `v1.0.1` research artifact associated with the study:
+This repository contains the canonical research artifact associated with the study:
 
 > **Valid Files, Broken Pipelines: A Mutation-Based Benchmark for Operational-Semantic Error Detection in GitHub Actions Workflows**
 
@@ -10,18 +10,29 @@ The benchmark evaluates whether GitHub Actions analysis tools detect operational
 
 **Valid Files, Broken Pipelines: A Mutation-Based Benchmark for Operational-Semantic Error Detection in GitHub Actions Workflows**
 
-**Author:** Tanya Srivastava  
-**ORCID:** https://orcid.org/0009-0000-5222-2076  
+**Authors:** Tanya Srivastava and Pulkit Srivastava  
+**Tanya Srivastava ORCID:** https://orcid.org/0009-0000-5222-2076  
 **Correspondence:** tanya.1108srivastava@gmail.com
+
+## Author Contributions
+
+**Tanya Srivastava:** Conceptualization, methodology, benchmark design, software and artifact development, investigation, experimentation, data curation, formal analysis, validation, visualization, reproducibility and artifact preparation, and writing—original draft and revision.
+
+**Pulkit Srivastava:** Independent evaluation, validation and review of study results, interpretation of findings, and writing—review and editing.
+
+**Both authors** reviewed and approved the final manuscript and associated v1.1.0 research artifact.
+
+The contribution statement above describes the current manuscript and v1.1.0 research artifact. It does not retroactively redefine authorship or provenance of previously frozen v1.0.0/v1.0.1 artifacts.
 
 ## Release and Archival Record
 
-- **Current release:** [`v1.0.1`](https://github.com/Tanya-Sriv/github-actions-semantic-benchmark/releases/tag/v1.0.1)
+- **Current public release:** [`v1.0.1`](https://github.com/Tanya-Sriv/github-actions-semantic-benchmark/releases/tag/v1.0.1)
+- **v1.1.0 status:** release preparation in progress
 - **Source repository:** [Tanya-Sriv/github-actions-semantic-benchmark](https://github.com/Tanya-Sriv/github-actions-semantic-benchmark)
-- **Zenodo DOI:** [10.5281/zenodo.21658780](https://doi.org/10.5281/zenodo.21658780)
+- **Existing Zenodo record:** [10.5281/zenodo.21658780](https://doi.org/10.5281/zenodo.21658780)
 - **License:** MIT
 
-The `v1.0.1` patch release aligns the repository documentation and citation metadata with the finalized manuscript title. The benchmark workflows, semantic mutants, negative controls, analysis outputs, controlled runtime evidence, prototype implementation, evaluation results, and scientific conclusions are unchanged from `v1.0.0`.
+The v1.1.0 release extends the public research package with additional validation and evaluation materials while preserving the provenance of previously frozen artifacts. Final v1.1.0 release metadata and the archival DOI/version record will be inserted after release finalization.
 
 ## Benchmark Contents
 
@@ -43,7 +54,7 @@ The repository includes:
 
 ## Release Validation Summary
 
-The released artifacts report:
+The released v1.0.1 artifacts report:
 
 - **18** semantic mutants;
 - **1 of 18** mutants detected by the union of the evaluated existing tools;
@@ -110,11 +121,7 @@ All workflows and evaluation artifacts were independently created for this study
 
 ## Citation
 
-To cite the software artifact:
-
-> T. Srivastava, *GitHub Actions Semantic Benchmark*, version 1.0.1, Zenodo, 2026. https://doi.org/10.5281/zenodo.21658780
-
-Citation metadata is also provided in [`CITATION.cff`](CITATION.cff).
+Citation metadata is provided in [`CITATION.cff`](CITATION.cff). The final v1.1.0 citation and Zenodo archival identifier will be updated after the release is frozen and archived.
 
 ## License
 
