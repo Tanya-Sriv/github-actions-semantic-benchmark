@@ -8,13 +8,12 @@ authors:
   - family-names: "Srivastava"
     given-names: "Tanya"
     orcid: "https://orcid.org/0009-0000-5222-2076"
+  - family-names: "Srivastava"
+    given-names: "Pulkit"
 
-version: "1.0.1"
-doi: "10.5281/zenodo.21658780"
-date-released: 2026-07-29
+version: "1.1.0"
 
 repository-code: "https://github.com/Tanya-Sriv/github-actions-semantic-benchmark"
-repository-artifact: "https://github.com/Tanya-Sriv/github-actions-semantic-benchmark/releases/tag/v1.0.1"
 url: "https://github.com/Tanya-Sriv/github-actions-semantic-benchmark"
 
 license: "MIT"
@@ -33,4 +32,7 @@ preferred-citation:
   authors:
     - family-names: "Srivastava"
       given-names: "Tanya"
+      orcid: "https://orcid.org/0009-0000-5222-2076"
+    - family-names: "Srivastava"
+      given-names: "Pulkit"
   year: 2026
