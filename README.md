@@ -18,11 +18,11 @@ The benchmark evaluates whether GitHub Actions analysis tools detect operational
 
 **Tanya Srivastava:** Conceptualization, methodology, benchmark design, software and artifact development, investigation, experimentation, data curation, formal analysis, validation, visualization, reproducibility and artifact preparation, and writing—original draft and revision.
 
-**Pulkit Srivastava:** Independent evaluation, validation and review of study results, interpretation of findings, and writing—review and editing.
+**Pulkit Srivastava:** Blinded independent human evaluation completed before joining the research team, followed by validation and review of study results, interpretation of findings, and writing—review and editing.
 
 **Both authors** reviewed and approved the final manuscript and associated v1.1.0 research artifact.
 
-The contribution statement above describes the current manuscript and v1.1.0 research artifact. It does not retroactively redefine authorship or provenance of previously frozen v1.0.0/v1.0.1 artifacts.
+Pulkit Srivastava completed the blinded human evaluation before becoming involved in the broader research and manuscript-development process. His subsequent co-authorship therefore does not alter the chronology of the blinded evaluation. The contribution statement above describes the current manuscript and v1.1.0 research artifact and does not retroactively redefine authorship or provenance of previously frozen v1.0.0/v1.0.1 artifacts.
 
 ## Release and Archival Record
 
